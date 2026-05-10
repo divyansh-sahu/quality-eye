@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>QualityEye — Agriberg</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gd:#2a5209;--gm:#3B6D11;--gl:#5d9120;--gp:#EAF3DE;--gt:#254908;
+  --am:#854F0B;--ap:#FDF0DC;--rd:#9B2525;--rp:#FCEAEA;
+  --bg:#F2F0E8;--card:#FFF;--sf:#ECEAE1;--bd:rgba(0,0,0,.07);
+  --t:#18180f;--t2:#64645c;--t3:#a4a49c;
+  --font:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);}
+body{font-family:var(--font);display:flex;justify-content:center;}
+.shell{width:100%;max-width:430px;min-height:100dvh;background:var(--bg);display:flex;flex-direction:column;}
+.scr{display:none;flex-direction:column;min-height:100dvh;}
+.scr.on{display:flex;}
+
+/* TOPBAR */
+.tbar{display:flex;align-items:center;justify-content:space-between;padding:52px 20px 14px;flex-shrink:0;}
+.tbar-t{font-size:15px;font-weight:500;color:var(--t);}
+.back{font-size:22px;color:var(--t2);cursor:pointer;padding:4px 10px 4px 0;line-height:1;}
+.logo{font-size:17px;font-weight:600;color:var(--t);letter-spacing:-.3px;}
+.logo b{color:var(--gm);}
+.pg{background:var(--gp);color:var(--gt);font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;}
+.pr{background:var(--rp);color:var(--rd);font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;}
+.pa{background:var(--ap);color:var(--am);font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;}
+.pb{background:#EEF2FF;color:#3730a3;font-size:11px;font-weight:500;padding:4px 12px;border-radius:20px;}
+
+/* HOME */
+.hero{padding:4px 20px 20px;}
+.hi{font-size:12px;color:var(--t3);margin-bottom:5px;}
+.h1{font-size:26px;font-weight:600;color:var(--t);line-height:1.22;letter-spacing:-.5px;}
+.crop-sec{padding:0 20px 18px;}
+.sec-lbl{font-size:11px;font-weight:500;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:9px;}
+.crop-pills{display:flex;gap:7px;flex-wrap:wrap;}
+.cpill{padding:7px 15px;border-radius:22px;border:1.5px solid var(--bd);font-size:13px;color:var(--t2);cursor:pointer;background:var(--card);font-family:var(--font);transition:all .15s;}
+.cpill.sel{background:var(--gp);border-color:var(--gl);color:var(--gt);font-weight:500;}
+
+/* MODE SELECTION */
+.mode-sec{padding:0 20px 20px;}
+.mode-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mode-card{background:var(--card);border:2px solid var(--bd);border-radius:16px;padding:16px 14px;cursor:pointer;transition:all .15s;text-align:left;}
+.mode-card.sel-raw{border-color:var(--gm);background:var(--gp);}
+.mode-card.sel-proc{border-color:#3730a3;background:#EEF2FF;}
+.mode-card:active{transform:scale(.97);}
+.mode-icon{font-size:24px;margin-bottom:8px;}
+.mode-title{font-size:14px;font-weight:600;color:var(--t);margin-bottom:4px;}
+.mode-desc{font-size:11px;color:var(--t2);line-height:1.45;}
+.mode-card.sel-raw .mode-title{color:var(--gt);}
+.mode-card.sel-proc .mode-title{color:#3730a3;}
+
+.cta-wrap{padding:0 20px 20px;display:flex;flex-direction:column;gap:9px;}
+.btn-scan{width:100%;background:var(--gm);color:#fff;border:none;border-radius:14px;padding:17px 20px;font-size:15px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;font-family:var(--font);transition:background .15s,transform .1s;}
+.btn-scan:active{transform:scale(.98);background:var(--gd);}
+.btn-scan.proc-mode{background:#4338ca;}
+.btn-scan.proc-mode:active{background:#3730a3;}
+.btn-upload{width:100%;background:var(--card);color:var(--t2);border:1.5px dashed rgba(0,0,0,.15);border-radius:14px;padding:14px 20px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;font-family:var(--font);transition:all .15s;}
+.btn-upload:hover{border-color:var(--gl);color:var(--gm);}
+.btn-upload:active{transform:scale(.98);}
+
+.rec-sec{padding:0 20px;flex:1;}
+.rec-card{background:var(--card);border-radius:14px;padding:13px 15px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;border:1px solid var(--bd);transition:transform .1s;}
+.rec-card:active{transform:scale(.98);}
+.rc-name{font-size:14px;font-weight:500;color:var(--t);}
+.rc-meta{font-size:11px;color:var(--t2);margin-top:3px;}
+.rc-pct{font-size:16px;font-weight:600;font-family:var(--mono);}
+.rc-date{font-size:11px;color:var(--t3);text-align:right;margin-top:3px;}
+.rc-mode{font-size:10px;padding:2px 8px;border-radius:10px;margin-top:4px;display:inline-block;}
+
+/* TIPS */
+.tips-scroll{flex:1;overflow-y:auto;padding:0 20px 20px;}
+.tips-intro{font-size:13px;color:var(--t2);line-height:1.6;margin-bottom:16px;padding:12px 14px;background:var(--card);border-radius:12px;border:1px solid var(--bd);}
+.tip-card{background:var(--card);border-radius:13px;padding:13px 15px;margin-bottom:9px;border:1px solid var(--bd);display:flex;gap:13px;align-items:flex-start;}
+.tip-icon{font-size:22px;flex-shrink:0;width:32px;text-align:center;margin-top:1px;}
+.tip-title{font-size:13px;font-weight:600;color:var(--t);margin-bottom:3px;}
+.tip-body{font-size:12px;color:var(--t2);line-height:1.5;}
+.tip-g{border-left:3px solid var(--gl);}
+.tip-r{border-left:3px solid var(--rd);}
+.tip-i{border-left:3px solid #4338ca;}
+.bg-compare{display:flex;gap:8px;margin-bottom:16px;}
+.bg-box{flex:1;border-radius:10px;padding:12px 8px;text-align:center;}
+.bg-label{font-size:11px;font-weight:500;margin-top:6px;}
+.tips-actions{padding:12px 20px 36px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--bd);flex-shrink:0;}
+
+/* FORM */
+.form-scroll{flex:1;overflow-y:auto;padding:0 20px 24px;}
+.fgrp{margin-bottom:15px;}
+.flbl{font-size:12px;font-weight:500;color:var(--t2);margin-bottom:6px;display:block;}
+.finp{width:100%;background:var(--card);border:1.5px solid var(--bd);border-radius:12px;padding:13px 14px;font-size:15px;font-family:var(--font);color:var(--t);outline:none;transition:border-color .15s;}
+.finp:focus{border-color:var(--gl);}
+.finp.proc-focus:focus{border-color:#4338ca;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.fnote{font-size:11px;color:var(--t3);margin-top:4px;line-height:1.4;}
+.form-actions{padding:12px 20px 36px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--bd);flex-shrink:0;}
+
+/* CAMERA */
+#scr-cam{background:#080d05;}
+.cam-area{flex:1;position:relative;display:flex;align-items:center;justify-content:center;background:#080d05;min-height:400px;}
+#vid{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+#cnv{display:none;}
+.cam-ui{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;}
+.cam-tag{position:absolute;top:18px;left:18px;background:rgba(0,0,0,.55);color:#fff;font-size:12px;font-weight:500;padding:5px 13px;border-radius:20px;backdrop-filter:blur(8px);}
+.cam-mode{position:absolute;top:18px;right:18px;font-size:11px;font-weight:500;padding:5px 13px;border-radius:20px;backdrop-filter:blur(8px);}
+.cam-mode-raw{background:rgba(59,109,17,.7);color:#EAF3DE;}
+.cam-mode-proc{background:rgba(67,56,202,.7);color:#EEF2FF;}
+.sframe{width:256px;height:256px;position:relative;}
+.sc{position:absolute;width:22px;height:22px;border-style:solid;}
+.sc-raw{border-color:#7bc142;}
+.sc-proc{border-color:#818cf8;}
+.sc-tl{top:0;left:0;border-width:2.5px 0 0 2.5px;border-radius:5px 0 0 0;}
+.sc-tr{top:0;right:0;border-width:2.5px 2.5px 0 0;border-radius:0 5px 0 0;}
+.sc-bl{bottom:0;left:0;border-width:0 0 2.5px 2.5px;border-radius:0 0 0 5px;}
+.sc-br{bottom:0;right:0;border-width:0 2.5px 2.5px 0;border-radius:0 0 5px 0;}
+.sline-raw{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#7bc142,#c8f07a,#7bc142,transparent);animation:sln 2.2s ease-in-out infinite;box-shadow:0 0 10px rgba(123,193,66,.7);}
+.sline-proc{position:absolute;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#818cf8,#c7d2fe,#818cf8,transparent);animation:sln 2.2s ease-in-out infinite;box-shadow:0 0 10px rgba(129,140,248,.7);}
+@keyframes sln{0%,100%{top:4%}50%{top:93%}}
+.cam-hint{position:absolute;bottom:18px;text-align:center;color:rgba(255,255,255,.6);font-size:12px;line-height:1.6;}
+.cam-hint small{display:block;font-size:10px;color:rgba(255,255,255,.35);margin-top:2px;}
+.cam-ctrl{padding:22px 32px 40px;background:#080d05;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.cam-side{color:rgba(255,255,255,.45);font-size:14px;cursor:pointer;padding:8px;font-family:var(--font);}
+.shutter{width:70px;height:70px;border-radius:50%;background:#fff;border:4px solid rgba(255,255,255,.25);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .1s;}
+.shutter:active{transform:scale(.91);}
+.shutter-in{width:55px;height:55px;border-radius:50%;background:#fff;border:2.5px solid #ccc;}
+
+/* ANALYSING */
+.ana-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;background:var(--bg);}
+.img-wrap{width:188px;height:188px;border-radius:20px;overflow:hidden;margin-bottom:24px;border:2px solid var(--bd);position:relative;background:var(--sf);}
+#prev{width:100%;height:100%;object-fit:cover;}
+.pulse-ring{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:64px;height:64px;border-radius:50%;border:2px solid;animation:pulse 1.6s ease-out infinite;}
+.pr-raw{border-color:var(--gl);}
+.pr-proc{border-color:#818cf8;}
+@keyframes pulse{0%{transform:translate(-50%,-50%) scale(.7);opacity:1}100%{transform:translate(-50%,-50%) scale(1.7);opacity:0}}
+.spin-row{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.spin{width:17px;height:17px;border-radius:50%;border:2px solid var(--bd);border-top-color:var(--gm);animation:spin .7s linear infinite;}
+.spin-proc{border-top-color:#4338ca;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ana-title{font-size:16px;font-weight:500;color:var(--t);}
+.ana-sub{font-size:13px;color:var(--t2);text-align:center;margin-bottom:20px;}
+.steps{width:100%;display:flex;flex-direction:column;gap:7px;}
+.step{display:flex;align-items:center;gap:11px;padding:10px 13px;background:var(--card);border-radius:12px;border:1px solid var(--bd);transition:border-color .3s;}
+.step.done{border-color:rgba(93,145,32,.3);}
+.step.active-raw{border-color:var(--gl);}
+.step.active-proc{border-color:#818cf8;}
+.step-ic{width:18px;text-align:center;font-size:13px;flex-shrink:0;}
+.step-tx{font-size:13px;flex:1;}
+.step.done .step-tx{color:var(--gm);}
+.step.active-raw .step-tx,.step.active-proc .step-tx{color:var(--t);font-weight:500;}
+.step.pend .step-tx{color:var(--t3);}
+
+/* RESULT — IMAGE VIEWER */
+.res-scr{flex:1;overflow-y:auto;padding-bottom:8px;-webkit-overflow-scrolling:touch;}
+
+.img-viewer{position:relative;margin:0;background:#111;width:100%;}
+.img-viewer canvas{display:block;width:100%;height:auto;max-height:340px;object-fit:contain;}
+.img-viewer-hint{position:absolute;bottom:0;left:0;right:0;background:linear-gradient(transparent,rgba(0,0,0,.7));padding:20px 14px 10px;display:flex;align-items:center;gap:6px;}
+.ivh-text{font-size:11px;color:rgba(255,255,255,.7);}
+.overlay-clear-btn{margin-left:auto;background:rgba(255,255,255,.15);color:#fff;border:none;border-radius:20px;padding:4px 12px;font-size:11px;cursor:pointer;font-family:var(--font);}
+
+/* COLOUR CHIPS — below image */
+.colour-chips-wrap{padding:12px 16px;background:var(--card);border-bottom:1px solid var(--bd);}
+.cc-label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--t2);margin-bottom:8px;}
+.cc-chips{display:flex;gap:7px;flex-wrap:wrap;}
+.cc-chip{display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:20px;border:1.5px solid var(--bd);cursor:pointer;background:var(--sf);transition:all .15s;font-family:var(--font);}
+.cc-chip:active{transform:scale(.96);}
+.cc-chip.active-chip{border-width:2px;}
+.cc-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.cc-name{font-size:12px;color:var(--t);font-weight:400;}
+.cc-pct{font-size:11px;color:var(--t2);font-family:var(--mono);}
+.cc-hint{font-size:10px;color:var(--t3);margin-top:6px;}
+
+/* REST OF RESULT */
+.res-body{padding-bottom:8px;}
+
+.al-box{margin:10px 16px 0;border-radius:13px;padding:11px 14px;display:flex;gap:10px;border:1px solid;}
+.al-d{background:var(--rp);border-color:rgba(155,37,37,.2);}
+.al-w{background:var(--ap);border-color:rgba(133,79,11,.2);}
+.al-i{background:#EDF4FE;border-color:rgba(30,90,180,.15);}
+.al-ic{font-size:16px;flex-shrink:0;margin-top:1px;}
+.al-d .al-ic{color:var(--rd);}
+.al-w .al-ic{color:var(--am);}
+.al-i .al-ic{color:#1a5acc;}
+.al-title{font-size:12px;font-weight:600;margin-bottom:3px;}
+.al-d .al-title{color:#5c1515;}.al-w .al-title{color:var(--am);}.al-i .al-title{color:#1a3d80;}
+.al-body{font-size:12px;line-height:1.5;}
+.al-d .al-body{color:#7c1c1c;}.al-w .al-body{color:#5c3306;}.al-i .al-body{color:#254080;}
+
+/* MODE BANNER */
+.mode-banner{margin:12px 16px 0;border-radius:13px;padding:11px 14px;display:flex;align-items:center;gap:10px;}
+.mb-raw{background:var(--gp);border:1px solid rgba(59,109,17,.2);}
+.mb-proc{background:#EEF2FF;border:1px solid rgba(67,56,202,.2);}
+.mb-ic{font-size:18px;}
+.mb-title{font-size:13px;font-weight:600;}
+.mb-raw .mb-title{color:var(--gt);}
+.mb-proc .mb-title{color:#3730a3;}
+.mb-sub{font-size:11px;margin-top:1px;}
+.mb-raw .mb-sub{color:var(--gm);}
+.mb-proc .mb-sub{color:#4338ca;}
+
+.rec-block{margin:10px 16px 0;border-radius:14px;padding:15px 16px;display:flex;justify-content:space-between;align-items:center;}
+.rec-raw{background:var(--gp);}
+.rec-proc{background:#EEF2FF;}
+.rl-lbl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;margin-bottom:3px;}
+.rec-raw .rl-lbl{color:var(--gm);}
+.rec-proc .rl-lbl{color:#4338ca;}
+.rl-val{font-size:32px;font-weight:600;font-family:var(--mono);line-height:1;}
+.rec-raw .rl-val{color:var(--gt);}
+.rec-proc .rl-val{color:#3730a3;}
+.rl-sub{font-size:11px;margin-top:4px;}
+.rec-raw .rl-sub{color:var(--gm);}
+.rec-proc .rl-sub{color:#4338ca;}
+.rr-lbl{font-size:10px;text-align:right;margin-bottom:3px;}
+.rec-raw .rr-lbl{color:var(--gm);}
+.rec-proc .rr-lbl{color:#4338ca;}
+.rr-val{font-size:19px;font-weight:600;font-family:var(--mono);text-align:right;}
+.rr-note{font-size:10px;text-align:right;margin-top:2px;}
+.rec-raw .rr-note,.rec-proc .rr-note{color:var(--t2);}
+
+.dcard{margin:10px 16px 0;background:var(--card);border-radius:14px;padding:14px 16px;border:1px solid var(--bd);}
+.dcard-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;}
+.dcard-t{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--t2);}
+.dcard-b{font-size:11px;background:var(--sf);color:var(--t2);padding:3px 10px;border-radius:10px;}
+.sbar{display:flex;height:18px;border-radius:7px;overflow:hidden;gap:2px;margin-bottom:12px;}
+.sbar-s{height:100%;}
+.crow-w{display:flex;flex-direction:column;gap:8px;}
+.crow{display:flex;align-items:center;gap:8px;}
+.cdot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.cname{font-size:12px;color:var(--t);width:96px;flex-shrink:0;}
+.cbar-w{flex:1;height:4px;background:var(--sf);border-radius:2px;}
+.cbar{height:4px;border-radius:2px;}
+.cpct{font-size:12px;font-weight:600;font-family:var(--mono);width:32px;text-align:right;flex-shrink:0;}
+.cimp{font-size:11px;width:60px;text-align:right;flex-shrink:0;font-family:var(--mono);}
+.dvdr{height:1px;background:var(--sf);margin:10px 0;}
+.imp-row{display:flex;justify-content:space-between;align-items:center;}
+.imp-lbl{font-size:12px;color:var(--t2);}
+.imp-val{font-size:13px;font-weight:600;font-family:var(--mono);}
+
+.yrow-w{display:flex;flex-direction:column;gap:9px;}
+.yrow{display:flex;align-items:center;gap:8px;}
+.ylbl{font-size:12px;color:var(--t);width:116px;flex-shrink:0;}
+.ybar-w{flex:1;height:5px;background:var(--sf);border-radius:3px;}
+.ybar{height:5px;border-radius:3px;}
+.ypct{font-size:12px;font-weight:600;font-family:var(--mono);width:34px;text-align:right;}
+.yprice{font-size:11px;font-family:var(--mono);width:64px;text-align:right;flex-shrink:0;}
+
+.size-card{margin:10px 16px 0;background:var(--card);border-radius:14px;padding:14px 16px;border:1px solid var(--bd);}
+.srow{display:flex;align-items:center;gap:8px;margin-bottom:7px;}
+.srow:last-child{margin-bottom:0;}
+.sdot{width:9px;height:9px;border-radius:2px;flex-shrink:0;}
+.snm{font-size:12px;color:var(--t);width:82px;flex-shrink:0;}
+.sbar2-w{flex:1;height:4px;background:var(--sf);border-radius:2px;}
+.sbar2{height:4px;border-radius:2px;}
+.spct{font-size:12px;font-weight:600;font-family:var(--mono);width:34px;text-align:right;}
+.srate{font-size:11px;font-family:var(--mono);width:64px;text-align:right;flex-shrink:0;}
+
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:10px 16px 0;}
+.mc{background:var(--card);border-radius:12px;padding:11px 13px;border:1px solid var(--bd);}
+.ml{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;color:var(--t2);margin-bottom:5px;}
+.mv{font-size:19px;font-weight:600;color:var(--t);font-family:var(--mono);}
+.mb-w{height:3px;background:var(--sf);border-radius:2px;margin-top:6px;}
+.mb2{height:3px;border-radius:2px;}
+.ms{font-size:10px;margin-top:4px;font-weight:500;}
+.ok{color:var(--gm);}.warn{color:var(--am);}.bad{color:var(--rd);}
+
+.conf-row{display:flex;align-items:center;gap:8px;padding:10px 16px 4px;}
+.conf-lbl{font-size:11px;color:var(--t3);flex:1;}
+.dots{display:flex;gap:3px;}
+.don{width:7px;height:7px;border-radius:50%;background:var(--gl);}
+.doff{width:7px;height:7px;border-radius:50%;background:var(--sf);}
+.conf-num{font-size:11px;color:var(--t2);font-family:var(--mono);}
+
+.lpills{padding:4px 16px 10px;display:flex;gap:6px;flex-wrap:wrap;}
+.lp{font-size:11px;background:var(--sf);color:var(--t2);padding:4px 10px;border-radius:20px;}
+.lp-r{background:var(--rp);color:var(--rd);}
+.lp-a{background:var(--ap);color:var(--am);}
+.lp-b{background:#EEF2FF;color:#3730a3;}
+
+.verdict{margin:4px 16px 14px;padding:13px 15px;background:var(--sf);border-radius:13px;}
+.vl{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--t2);margin-bottom:5px;}
+.vt{font-size:13px;color:var(--t);line-height:1.6;}
+
+.res-actions{padding:12px 16px 38px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--bd);background:var(--bg);flex-shrink:0;}
+.btn-p{width:100%;background:var(--gm);color:#fff;border:none;border-radius:13px;padding:15px;font-size:14px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font);transition:background .15s,transform .1s;}
+.btn-p:active{transform:scale(.98);background:var(--gd);}
+.btn-p.proc{background:#4338ca;}
+.btn-p.proc:active{background:#3730a3;}
+.btn-s{width:100%;background:var(--card);color:var(--t);border:1px solid var(--bd);border-radius:13px;padding:13px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;font-family:var(--font);transition:all .15s;}
+.btn-s:active{transform:scale(.98);}
+
+/* ERROR */
+.err-wrap{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 28px;text-align:center;}
+.err-t{font-size:18px;font-weight:600;color:var(--t);margin-bottom:10px;}
+.err-m{font-size:14px;color:var(--t2);line-height:1.6;margin-bottom:28px;}
+.btn-retry{background:var(--gm);color:#fff;border:none;border-radius:13px;padding:14px 32px;font-size:15px;font-weight:500;cursor:pointer;font-family:var(--font);}
+
+@media(min-width:430px){.shell{border-left:1px solid var(--bd);border-right:1px solid var(--bd);}}
+
+/* OUTPUT MIX TAPPABLE ROWS */
+.om-rows{display:flex;flex-direction:column;gap:0;}
+.om-row{display:flex;align-items:center;gap:8px;padding:10px 0;border-bottom:1px solid var(--sf);cursor:pointer;transition:background .15s;border-radius:8px;padding:9px 8px;margin:0 -8px;}
+.om-row:last-child{border-bottom:none;}
+.om-row:active{background:var(--sf);}
+.om-row.om-active{background:var(--sf);border-radius:8px;}
+.om-left{display:flex;align-items:center;gap:7px;width:140px;flex-shrink:0;}
+.om-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
+.om-lbl{font-size:12px;color:var(--t);}
+.om-mid{flex:1;}
+.om-bar-w{width:100%;height:4px;background:var(--sf);border-radius:2px;}
+.om-bar{height:4px;border-radius:2px;}
+.om-pct{font-size:12px;font-weight:600;font-family:var(--mono);width:32px;text-align:right;flex-shrink:0;}
+.om-price{font-size:11px;font-family:var(--mono);width:62px;text-align:right;flex-shrink:0;}
+.om-tap-hint{font-size:10px;opacity:.3;flex-shrink:0;transition:opacity .15s;}
+.om-row.om-active .om-tap-hint{opacity:0;}
+.om-row:hover .om-tap-hint{opacity:.6;}
+
+.rtab{flex:1;padding:11px 4px;font-size:12px;font-weight:500;text-align:center;
+  color:var(--t2);cursor:pointer;border-bottom:2.5px solid transparent;
+  transition:all .15s;-webkit-tap-highlight-color:transparent;white-space:nowrap;}
+.rtab.on{color:#2563eb;border-bottom-color:#2563eb;}
+.rtab.on-proc{color:#4338ca;border-bottom-color:#4338ca;}
+.crow-active{background:rgba(0,0,0,0.05);border-radius:8px;}
+.crow{border-radius:8px;transition:background .12s;}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- ══ HOME ══ -->
+<div class="scr on" id="scr-home">
+  <div class="tbar">
+    <span class="logo">Quality<b>Eye</b></span>
+    <span style="font-size:12px;color:var(--t3);">by Agriberg</span>
+  </div>
+  <div class="hero">
+    <div class="hi">Namaste, Ramesh bhai 👋</div>
+    <div class="h1">What are you<br>inspecting today?</div>
+  </div>
+
+  <!-- CROP -->
+  <div class="crop-sec">
+    <div class="sec-lbl">Crop</div>
+    <div class="crop-pills">
+      <div class="cpill" onclick="selCrop(this,'Chana')">Chana</div>
+      <div class="cpill sel" onclick="selCrop(this,'Moong')">Moong</div>
+      <div class="cpill" onclick="selCrop(this,'Tur dal')">Tur dal</div>
+      <div class="cpill" onclick="selCrop(this,'Urad')">Urad</div>
+      <div class="cpill" onclick="selCrop(this,'Masoor')">Masoor</div>
+    </div>
+  </div>
+
+  <!-- MODE -->
+  <div class="mode-sec">
+    <div class="sec-lbl">What are you buying?</div>
+    <div class="mode-row">
+      <div class="mode-card sel-raw" id="mode-raw" onclick="selMode('raw')">
+        <div class="mode-icon">🌾</div>
+        <div class="mode-title">Raw material</div>
+        <div class="mode-desc">Whole grain at mandi or godown. Should I buy? At what price?</div>
+      </div>
+      <div class="mode-card" id="mode-proc" onclick="selMode('proc')">
+        <div class="mode-icon">🟡</div>
+        <div class="mode-title">Processed dal</div>
+        <div class="mode-desc">Already milled dal. Checking output grade, colour mix, broken %.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTAs -->
+  <div class="cta-wrap">
+    <button class="btn-scan" id="home-scan-btn" onclick="goTips('cam')">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      Scan lot
+    </button>
+    <button class="btn-upload" onclick="goTips('upload')">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+      Upload photo from gallery
+    </button>
+    <input type="file" id="file-inp" accept="image/*" style="display:none" onchange="handleUpload(event)">
+  </div>
+
+  <!-- RECENT -->
+  <div class="rec-sec">
+    <div class="sec-lbl" style="margin-bottom:10px;">Recent scans</div>
+    <div class="rec-card" onclick="showDemo('raw')">
+      <div>
+        <div class="rc-name">Moong whole — Lot #MG-1143</div>
+        <div class="rc-meta">Nagpur godown · 300 qtl · ₹7,200</div>
+        <span class="rc-mode" style="background:var(--gp);color:var(--gt);">Raw material</span>
+      </div>
+      <div>
+        <div class="rc-pct" style="color:var(--rd);">61.2%</div>
+        <div class="rc-date">Yesterday</div>
+      </div>
+    </div>
+    <div class="rec-card" onclick="showDemo('proc')">
+      <div>
+        <div class="rc-name">Moong dal — Lot #MD-0892</div>
+        <div class="rc-meta">Nagpur market · 150 qtl · ₹8,400</div>
+        <span class="rc-mode" style="background:#EEF2FF;color:#3730a3;">Processed dal</span>
+      </div>
+      <div>
+        <div class="rc-pct" style="color:var(--am);">B+</div>
+        <div class="rc-date">2 days ago</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TIPS ══ -->
+<div class="scr" id="scr-tips">
+  <div class="tbar">
+    <div style="display:flex;align-items:center;gap:4px;">
+      <span class="back" onclick="goScr('scr-home')">←</span>
+      <span class="tbar-t">Before you scan</span>
+    </div>
+    <span id="tips-mode-badge" class="pg">Raw material</span>
+  </div>
+  <div class="tips-scroll">
+    <div class="tips-intro" id="tips-intro-text">Follow these tips for accurate analysis.</div>
+
+    <div class="sec-lbl" style="margin-bottom:8px;">Background matters most</div>
+    <div class="bg-compare">
+      <div class="bg-box" style="background:#f8f8f0;border:1.5px solid #ddd;">
+        <div style="font-size:26px;">🌾</div>
+        <div class="bg-label" style="color:var(--gm);">✓ White / light</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:2px;">Ideal</div>
+      </div>
+      <div class="bg-box" style="background:#c9b84a22;border:1.5px solid #c9b84a44;">
+        <div style="font-size:26px;">🌾</div>
+        <div class="bg-label" style="color:var(--am);">⚠ Yellow / tan</div>
+        <div style="font-size:10px;color:var(--t2);margin-top:2px;">Affects colour</div>
+      </div>
+      <div class="bg-box" style="background:#3d1010;border:1.5px solid #5a1a1a;">
+        <div style="font-size:26px;opacity:.5;">🌾</div>
+        <div class="bg-label" style="color:var(--rd);">✗ Dark / red</div>
+        <div style="font-size:10px;color:#d4a4a4;margin-top:2px;">Avoid</div>
+      </div>
+    </div>
+
+    <div class="tip-card tip-g">
+      <div class="tip-icon">☀️</div>
+      <div><div class="tip-title">Natural light, no flash</div><div class="tip-body">Outdoor or near a window. Flash washes out colour grading. Yellow tube light skews yellow tones especially for moong and chana.</div></div>
+    </div>
+    <div class="tip-card tip-g">
+      <div class="tip-icon">📐</div>
+      <div><div class="tip-title">Straight overhead, 20–30 cm</div><div class="tip-body">Hold phone directly above the sample, not at an angle. This distance fits ~200 grains — enough for accurate sampling.</div></div>
+    </div>
+    <div class="tip-card tip-g">
+      <div class="tip-icon">🌾</div>
+      <div><div class="tip-title">Single layer, spread flat</div><div class="tip-body">No piling. Spread grain in one layer on a flat surface. Sample from 3 spots in the lot — top, middle, bottom. Traders always show the best grain on top.</div></div>
+    </div>
+    <div class="tip-card tip-r">
+      <div class="tip-icon">🚫</div>
+      <div><div class="tip-title">Don't scan through bag or net</div><div class="tip-body">Remove from bag first. Net patterns inflate impurity count and distort size grading.</div></div>
+    </div>
+    <div class="tip-card tip-i" id="tip-proc" style="display:none;">
+      <div class="tip-icon">🟡</div>
+      <div><div class="tip-title">For processed dal — spread on white plate</div><div class="tip-body">Dal halves are flat — they clump together. Spread thin. Check for skin fragments, broken halves, and colour consistency in different parts of the bag.</div></div>
+    </div>
+  </div>
+  <div class="tips-actions">
+    <button class="btn-p" id="tips-next-btn" onclick="proceedFromTips()">Got it — continue →</button>
+    <button class="btn-s" onclick="goScr('scr-home')">Back</button>
+  </div>
+</div>
+
+<!-- ══ LOT FORM ══ -->
+<div class="scr" id="scr-form">
+  <div class="tbar">
+    <div style="display:flex;align-items:center;gap:4px;">
+      <span class="back" onclick="goScr('scr-tips')">←</span>
+      <span class="tbar-t">Lot details</span>
+    </div>
+    <span id="form-badge" class="pg">Moong · Raw</span>
+  </div>
+  <div class="form-scroll">
+    <div style="font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:18px;">These details make the ₹ impact calculation real.</div>
+    <div class="frow">
+      <div class="fgrp">
+        <label class="flbl">Lot number</label>
+        <input class="finp" id="f-lot" type="text" placeholder="e.g. MG-1143">
+      </div>
+      <div class="fgrp">
+        <label class="flbl">Location</label>
+        <input class="finp" id="f-loc" type="text" placeholder="e.g. Nagpur">
+      </div>
+    </div>
+    <div class="frow">
+      <div class="fgrp">
+        <label class="flbl">Quantity (qtl)</label>
+        <input class="finp" id="f-qty" type="number" placeholder="e.g. 300" inputmode="numeric">
+      </div>
+      <div class="fgrp">
+        <label class="flbl">Quoted price (₹/qtl)</label>
+        <input class="finp" id="f-price" type="number" placeholder="e.g. 7200" inputmode="numeric">
+      </div>
+    </div>
+    <!-- Raw only -->
+    <div id="raw-fields">
+      <div class="fgrp">
+        <label class="flbl">Your recovery assumption (%)</label>
+        <input class="finp" id="f-recov" type="number" placeholder="e.g. 65" inputmode="numeric">
+        <div class="fnote">What recovery % were you expecting? Scan will show ₹ difference.</div>
+      </div>
+    </div>
+    <!-- Proc only -->
+    <div id="proc-fields" style="display:none;">
+      <div class="fgrp">
+        <label class="flbl">Expected colour grade</label>
+        <input class="finp proc-focus" id="f-grade" type="text" placeholder="e.g. A / B+ / B">
+        <div class="fnote">What grade is the seller claiming this dal is?</div>
+      </div>
+    </div>
+    <div class="fgrp">
+      <label class="flbl">Seller name <span style="color:var(--t3);font-weight:400;">(optional)</span></label>
+      <input class="finp" id="f-seller" type="text" placeholder="e.g. Sharma Traders">
+    </div>
+  </div>
+  <div class="form-actions">
+    <button class="btn-p" id="form-next-btn" onclick="proceedFromForm()">Continue →</button>
+    <button class="btn-s" onclick="goScr('scr-tips')">Back</button>
+  </div>
+</div>
+
+<!-- ══ CAMERA ══ -->
+<div class="scr" id="scr-cam" style="background:#080d05;">
+  <div class="cam-area">
+    <video id="vid" autoplay playsinline muted></video>
+    <canvas id="cnv"></canvas>
+    <div class="cam-ui">
+      <div class="cam-tag" id="cam-tag">Moong</div>
+      <div class="cam-mode cam-mode-raw" id="cam-mode-badge">Raw material</div>
+      <div class="sframe">
+        <div class="sc sc-raw sc-tl" id="sc-tl"></div>
+        <div class="sc sc-raw sc-tr" id="sc-tr"></div>
+        <div class="sc sc-raw sc-bl" id="sc-bl"></div>
+        <div class="sc sc-raw sc-br" id="sc-br"></div>
+        <div class="sline-raw" id="scan-line"></div>
+      </div>
+      <div class="cam-hint">
+        White surface · grain flat · overhead shot
+        <small>20–30 cm · natural light</small>
+      </div>
+    </div>
+  </div>
+  <div class="cam-ctrl">
+    <span class="cam-side" onclick="stopCam();goScr('scr-home')">Cancel</span>
+    <button class="shutter" onclick="capture()" aria-label="Capture"><div class="shutter-in"></div></button>
+    <span class="cam-side" style="opacity:0">flip</span>
+  </div>
+</div>
+
+<!-- ══ ANALYSING ══ -->
+<div class="scr" id="scr-ana">
+  <div class="tbar">
+    <span class="tbar-t">Analysing lot</span>
+    <span id="ana-badge" class="pg">Moong</span>
+  </div>
+  <div class="ana-wrap">
+    <div class="img-wrap">
+      <img id="prev" src="" alt="Grain sample">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;">
+        <div class="pulse-ring pr-raw" id="pr1"></div>
+        <div class="pulse-ring pr-raw" id="pr2" style="animation-delay:.6s;"></div>
+      </div>
+    </div>
+    <div class="spin-row"><div class="spin" id="spin-el"></div><span class="ana-title" id="ana-title-txt">Analysing grain</span></div>
+    <div class="ana-sub" id="ana-sub">QualityEye is reading the lot</div>
+    <div class="steps">
+      <div class="step done" id="st1"><span class="step-ic" style="color:var(--gm)">✓</span><span class="step-tx">Image captured</span></div>
+      <div class="step active-raw" id="st2"><span class="step-ic">◌</span><span class="step-tx">Detecting grain boundaries</span></div>
+      <div class="step pend" id="st3"><span class="step-ic">◌</span><span class="step-tx" id="st3-tx">Grading size &amp; colour</span></div>
+      <div class="step pend" id="st4"><span class="step-ic">◌</span><span class="step-tx">Checking for adulteration</span></div>
+      <div class="step pend" id="st5"><span class="step-ic">◌</span><span class="step-tx">Mapping colour zones on image</span></div>
+      <div class="step pend" id="st6"><span class="step-ic">◌</span><span class="step-tx" id="st6-tx">Estimating recovery %</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESULT ══ -->
+<div class="scr" id="scr-res">
+  <div class="tbar" style="flex-shrink:0;">
+    <div style="display:flex;align-items:center;gap:4px;">
+      <span class="back" onclick="goScr('scr-home')">←</span>
+      <span class="tbar-t">Scan result</span>
+    </div>
+    <span id="res-badge" class="pg">Moong</span>
+  </div>
+  <div class="res-scr" id="res-content">
+    <!-- IMAGE at top -->
+    <div class="img-viewer" id="img-viewer">
+      <canvas id="main-canvas"></canvas>
+      <div class="img-viewer-hint">
+        <span class="ivh-text" id="ivh-text">Tap a colour chip below to highlight those grains</span>
+        <button class="overlay-clear-btn" id="clear-btn" onclick="clearOverlay()" style="display:none;">Clear ✕</button>
+      </div>
+    </div>
+    <!-- COLOUR CHIPS -->
+    <div class="colour-chips-wrap" id="colour-chips-wrap">
+      <div class="cc-label" id="cc-label-txt">Tap to highlight on image →</div>
+      <div class="cc-chips" id="cc-chips"></div>
+      <div class="cc-hint" id="cc-hint"></div>
+    </div>
+    <!-- TABS -->
+    <div id="res-tabs" style="display:flex;border-bottom:0.5px solid var(--bd);background:var(--card);flex-shrink:0;"></div>
+    <!-- TAB CONTENT -->
+    <div id="res-body"></div>
+  </div>
+  <div class="res-actions">
+    <button class="btn-p" id="res-btn-margin" onclick="sendToMargin()">⟶ Send to MarginEngine</button>
+    <button class="btn-s" onclick="askAdvisor()">💬 Ask AgriAdvisor how to negotiate</button>
+  </div>
+</div>
+
+<!-- ══ ERROR ══ -->
+<div class="scr" id="scr-err">
+  <div class="tbar"><span class="back" onclick="goScr('scr-home')">←</span><span class="tbar-t">Scan failed</span></div>
+  <div class="err-wrap">
+    <div style="font-size:52px;margin-bottom:20px;">📷</div>
+    <div class="err-t">Could not analyse image</div>
+    <div class="err-m" id="err-msg">Try in better light with grain on a white surface.</div>
+    <button class="btn-retry" onclick="retryFromErr()">Try again</button>
+  </div>
+</div>
+
+</div><!-- /shell -->
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────
+let crop      = 'Moong';
+let mode      = 'raw';   // 'raw' or 'proc'
+let lotData   = { lot:'', loc:'', qty:300, price:0, recov:65, grade:'', seller:'' };
+let b64       = null;
+let mediaStream = null;
+let nextAction  = 'cam';
+let lastResult  = null;
+let activeChip  = null;   // currently highlighted colour grade key
+let baseImageData = null; // clean canvas pixels
+
+// ─── NAV ──────────────────────────────────────────────────────────────
+function goScr(id) {
+  document.querySelectorAll('.scr').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+// ─── CROP ─────────────────────────────────────────────────────────────
+function selCrop(el, c) {
+  document.querySelectorAll('.cpill').forEach(p => p.classList.remove('sel'));
+  el.classList.add('sel');
+  crop = c;
+}
+
+// ─── MODE ─────────────────────────────────────────────────────────────
+function selMode(m) {
+  mode = m;
+  document.getElementById('mode-raw').className  = 'mode-card' + (m==='raw'?' sel-raw':'');
+  document.getElementById('mode-proc').className = 'mode-card' + (m==='proc'?' sel-proc':'');
+  const btn = document.getElementById('home-scan-btn');
+  btn.className = 'btn-scan' + (m==='proc'?' proc-mode':'');
+}
+
+// ─── TIPS ─────────────────────────────────────────────────────────────
+function goTips(action) {
+  nextAction = action;
+  const isProc = mode === 'proc';
+  document.getElementById('tips-mode-badge').className = isProc ? 'pb' : 'pg';
+  document.getElementById('tips-mode-badge').textContent = isProc ? 'Processed dal' : 'Raw material';
+  document.getElementById('tips-intro-text').textContent = isProc
+    ? 'For accurate processed dal analysis, follow these steps.'
+    : 'For accurate raw grain analysis, follow these steps.';
+  document.getElementById('tip-proc').style.display = isProc ? 'flex' : 'none';
+  document.getElementById('tips-next-btn').className = 'btn-p' + (isProc ? ' proc' : '');
+  goScr('scr-tips');
+}
+
+function proceedFromTips() {
+  const isProc = mode === 'proc';
+  const defaults = { 'Moong':65,'Chana':70,'Tur dal':72,'Urad':68,'Masoor':70 };
+  if (!document.getElementById('f-recov').value)
+    document.getElementById('f-recov').value = defaults[crop] || 68;
+  document.getElementById('form-badge').textContent = crop + ' · ' + (isProc ? 'Processed' : 'Raw');
+  document.getElementById('form-badge').className = isProc ? 'pb' : 'pg';
+  document.getElementById('raw-fields').style.display = isProc ? 'none' : 'block';
+  document.getElementById('proc-fields').style.display = isProc ? 'block' : 'none';
+  document.getElementById('form-next-btn').className = 'btn-p' + (isProc ? ' proc' : '');
+  document.getElementById('form-next-btn').textContent = nextAction === 'cam' ? 'Continue to scan →' : 'Continue to upload →';
+  goScr('scr-form');
+}
+
+// ─── FORM ─────────────────────────────────────────────────────────────
+function proceedFromForm() {
+  lotData = {
+    lot:   document.getElementById('f-lot').value.trim()   || 'LOT-' + Date.now().toString().slice(-4),
+    loc:   document.getElementById('f-loc').value.trim()   || 'Unknown',
+    qty:   parseFloat(document.getElementById('f-qty').value)   || 300,
+    price: parseFloat(document.getElementById('f-price').value) || 0,
+    recov: parseFloat(document.getElementById('f-recov').value) || 65,
+    grade: document.getElementById('f-grade').value.trim() || '',
+    seller:document.getElementById('f-seller').value.trim() || ''
+  };
+  if (nextAction === 'cam') startCam();
+  else document.getElementById('file-inp').click();
+}
+
+// ─── CAMERA ───────────────────────────────────────────────────────────
+function startCam() {
+  goScr('scr-cam');
+  const isProc = mode === 'proc';
+  document.getElementById('cam-tag').textContent = crop;
+  document.getElementById('cam-mode-badge').textContent = isProc ? 'Processed dal' : 'Raw material';
+  document.getElementById('cam-mode-badge').className = 'cam-mode ' + (isProc ? 'cam-mode-proc' : 'cam-mode-raw');
+  ['sc-tl','sc-tr','sc-bl','sc-br'].forEach(id => {
+    document.getElementById(id).className = 'sc ' + (isProc ? 'sc-proc' : 'sc-raw') + ' ' + id.replace('sc-','sc-');
+  });
+  document.getElementById('scan-line').className = isProc ? 'sline-proc' : 'sline-raw';
+  if (!navigator.mediaDevices?.getUserMedia) { showErr('Camera not available. Open in Chrome on Android.'); return; }
+  navigator.mediaDevices.getUserMedia({ video:{ facingMode:{ideal:'environment'}, width:{ideal:1920}, height:{ideal:1080} } })
+    .then(s => { mediaStream = s; document.getElementById('vid').srcObject = s; })
+    .catch(() => showErr('Camera permission denied.'));
+}
+
+function stopCam() {
+  if (mediaStream) { mediaStream.getTracks().forEach(t => t.stop()); mediaStream = null; }
+}
+
+function capture() {
+  const v = document.getElementById('vid'), c = document.getElementById('cnv');
+  c.width = v.videoWidth || 1280; c.height = v.videoHeight || 720;
+  c.getContext('2d').drawImage(v, 0, 0);
+  b64 = c.toDataURL('image/jpeg', 0.9).split(',')[1];
+  stopCam(); startAnalysis();
+}
+
+// ─── UPLOAD ───────────────────────────────────────────────────────────
+function handleUpload(e) {
+  const file = e.target.files[0]; if (!file) return;
+  e.target.value = '';
+  // Pull form data if not set
+  lotData = {
+    lot:   document.getElementById('f-lot').value.trim()   || 'LOT-' + Date.now().toString().slice(-4),
+    loc:   document.getElementById('f-loc').value.trim()   || 'Unknown',
+    qty:   parseFloat(document.getElementById('f-qty').value)   || 300,
+    price: parseFloat(document.getElementById('f-price').value) || 0,
+    recov: parseFloat(document.getElementById('f-recov').value) || 65,
+    grade: document.getElementById('f-grade').value.trim() || '',
+    seller:document.getElementById('f-seller').value.trim() || ''
+  };
+  const reader = new FileReader();
+  reader.onload = ev => {
+    const img = new Image();
+    img.onload = () => {
+      const maxW = 1280, c2 = document.createElement('canvas');
+      let w = img.width, h = img.height;
+      if (w > maxW) { h = Math.round(h * maxW / w); w = maxW; }
+      c2.width = w; c2.height = h;
+      c2.getContext('2d').drawImage(img, 0, 0, w, h);
+      b64 = c2.toDataURL('image/jpeg', 0.9).split(',')[1];
+      startAnalysis();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ─── ANALYSIS ─────────────────────────────────────────────────────────
+function startAnalysis() {
+  document.getElementById('prev').src = 'data:image/jpeg;base64,' + b64;
+  document.getElementById('ana-badge').textContent = crop;
+  const isProc = mode === 'proc';
+  document.getElementById('pr1').className = 'pulse-ring ' + (isProc ? 'pr-proc' : 'pr-raw');
+  document.getElementById('pr2').className = 'pulse-ring ' + (isProc ? 'pr-proc' : 'pr-raw');
+  document.getElementById('spin-el').className = 'spin' + (isProc ? ' spin-proc' : '');
+  document.getElementById('st3-tx').textContent = isProc ? 'Grading output mix & colour' : 'Grading size & colour';
+  document.getElementById('st6-tx').textContent = isProc ? 'Scoring output grade' : 'Estimating recovery %';
+  resetSteps();
+  goScr('scr-ana');
+  runLLM();
+}
+
+function resetSteps() {
+  const isProc = mode === 'proc';
+  const ac = isProc ? 'active-proc' : 'active-raw';
+  [['st1','done'],['st2',ac],['st3','pend'],['st4','pend'],['st5','pend'],['st6','pend']].forEach(([id,cls]) => {
+    const el = document.getElementById(id);
+    el.className = 'step ' + cls;
+    const ic = el.querySelector('.step-ic');
+    ic.textContent = cls === 'done' ? '✓' : '◌';
+    ic.style.color = cls === 'done' ? 'var(--gm)' : '';
+  });
+}
+
+function markDone(id) {
+  const el = document.getElementById(id); el.className = 'step done';
+  const ic = el.querySelector('.step-ic'); ic.textContent = '✓'; ic.style.color = 'var(--gm)';
+}
+function setActive(id) {
+  document.getElementById(id).className = 'step ' + (mode==='proc'?'active-proc':'active-raw');
+}
+function delay(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── LLM ──────────────────────────────────────────────────────────────
+
+// ─── BACKGROUND MASKING ───────────────────────────────────────────────────
+// Detects background colour from corners, masks it out, returns cropped b64
+// Original image is shown to miller, masked version sent to LLM
+async function maskBackground(b64src) {
+  return new Promise(function(resolve) {
+    var img = new Image();
+    img.onload = function() {
+      var W = img.width, H = img.height;
+      var c = document.createElement('canvas');
+      c.width = W; c.height = H;
+      var ctx = c.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      var data = ctx.getImageData(0, 0, W, H);
+      var px = data.data;
+
+      // Sample background from 4 corners (20x20 pixels each)
+      var bgSamples = [];
+      var corners = [[0,0],[W-20,0],[0,H-20],[W-20,H-20]];
+      corners.forEach(function(corner) {
+        var cx = corner[0], cy = corner[1];
+        for (var dy=0; dy<20; dy++) {
+          for (var dx=0; dx<20; dx++) {
+            var idx = ((cy+dy)*W + (cx+dx)) * 4;
+            bgSamples.push([px[idx], px[idx+1], px[idx+2]]);
+          }
+        }
+      });
+
+      // Average background colour
+      var bgR = bgSamples.reduce(function(s,c){return s+c[0];},0) / bgSamples.length;
+      var bgG = bgSamples.reduce(function(s,c){return s+c[1];},0) / bgSamples.length;
+      var bgB = bgSamples.reduce(function(s,c){return s+c[2];},0) / bgSamples.length;
+
+      // Threshold: how different a pixel must be from background to be "grain"
+      // Use tighter threshold for light backgrounds, looser for dark
+      var isBright = (bgR + bgG + bgB) / 3 > 180;
+      var threshold = isBright ? 30 : 40;
+
+      // Mask background pixels to white
+      var minX=W, minY=H, maxX=0, maxY=0;
+      for (var y=0; y<H; y++) {
+        for (var x=0; x<W; x++) {
+          var i = (y*W + x) * 4;
+          var r=px[i], g=px[i+1], b=px[i+2];
+          var dist = Math.sqrt(
+            (r-bgR)*(r-bgR) + (g-bgG)*(g-bgG) + (b-bgB)*(b-bgB)
+          );
+          if (dist < threshold) {
+            // Background — set to white
+            px[i]=255; px[i+1]=255; px[i+2]=255;
+          } else {
+            // Grain — track bounding box
+            if (x < minX) minX=x; if (x > maxX) maxX=x;
+            if (y < minY) minY=y; if (y > maxY) maxY=y;
+          }
+        }
+      }
+      ctx.putImageData(data, 0, 0);
+
+      // Crop to grain bounding box with 20px padding
+      var pad = 20;
+      minX = Math.max(0, minX-pad); minY = Math.max(0, minY-pad);
+      maxX = Math.min(W, maxX+pad); maxY = Math.min(H, maxY+pad);
+      var cropW = maxX-minX, cropH = maxY-minY;
+
+      // If crop is too small or failed — return original
+      if (cropW < 50 || cropH < 50) {
+        console.log('Masking: crop too small, using original');
+        resolve(b64src);
+        return;
+      }
+
+      // Draw cropped region to new canvas
+      var c2 = document.createElement('canvas');
+      c2.width = cropW; c2.height = cropH;
+      var ctx2 = c2.getContext('2d');
+      ctx2.drawImage(c, minX, minY, cropW, cropH, 0, 0, cropW, cropH);
+
+      var result = c2.toDataURL('image/jpeg', 0.92).split(',')[1];
+      console.log('Masking: original ' + W + 'x' + H + ' → cropped ' + cropW + 'x' + cropH);
+      resolve(result);
+    };
+    img.onerror = function() { resolve(b64src); };
+    img.src = 'data:image/jpeg;base64,' + b64src;
+  });
+}
+
+async function runLLM() {
+  await delay(800); markDone('st2'); setActive('st3');
+  await delay(700); markDone('st3'); setActive('st4');
+  await delay(600); markDone('st4'); setActive('st5');
+
+  const isProc = mode === 'proc';
+
+  const sysPrompt = `You are QualityEye, a grain quality AI used by Indian pulse millers to make real procurement decisions involving lakhs of rupees. Your output directly affects whether a miller buys or rejects a lot, and at what price.
+
+CRITICAL — MONETARY STAKES:
+- Every number you give will be used to negotiate a real trade. Wrong numbers cost real money.
+- If you cannot clearly SEE a defect in the image, report 0-1%. Never guess or hallucinate.
+- Do NOT generate plausible-sounding defect numbers. Only report what is visually confirmable.
+- When uncertain, always err on the side of LOWER defect numbers and HIGHER quality grade.
+- A false positive (reporting defect that isn't there) is worse than a false negative for the miller.
+
+VISUAL DISCIPLINE:
+- Dark backgrounds, shadows, and blur are NOT defects. Evaluate grain surfaces only.
+- Broken grain = grain that is physically split or cracked. Edge ambiguity is NOT broken grain.
+- Black spots = actual dark discolouration on grain surface. Shadows are NOT black spots.
+- Shrivelled = visibly shrunken, wrinkled grain. Normal size variation is NOT shrivelled.
+- Weevil damage = visible holes or insect marks. If not clearly visible, report 0%.
+- If the image quality limits your assessment, say so in image_quality_note and lower confidence_pct.
+
+DAL PROCESSING KNOWLEDGE:
+- Chilka dals (moong chilka, urad chilka): each grain has a skin side and a cotyledon side. ~50% of visible surfaces will show the cream cotyledon face — this is NORMAL, not a defect. Grade only by the skin colour.
+- Dhuli dals (moong dhuli, toor, chana dal, urad dhuli): both faces should be the same colour. Variation between faces is a defect.
+
+Return ONLY raw JSON, no markdown, no explanation outside the JSON.`;
+
+  const rawPrompt = `You are QualityEye, an expert grain quality AI trained on Indian mandi grading standards.
+Analyse this ${crop} WHOLE GRAIN image. Lot: ${lotData.qty} qtl, ${lotData.loc}, quoted Rs${lotData.price}/qtl, miller assumes ${lotData.recov}% recovery.
+
+MOONG GRADING (use when crop is Moong):
+Grade A: Parrot green >70%, bold uniform grains, broken <5%, moisture <11%. Commands Rs200-400 premium.
+Grade B+: Mixed green 55-70%, mostly bold, broken 5-10%, moisture 11-12%. Standard traded grade.
+Grade B: Yellowing up to 25%, mixed sizes, broken 10-15%, moisture 12-13%.
+Grade C: Yellowing >25%, broken >15%, moisture >13%, black spots >3%.
+Key: Grains showing cream/white cotyledon face are SPLIT — major defect in whole moong.
+Background: If dark/red bowl, evaluate grain colour relative to each other not background.
+
+Respond ONLY with a JSON object. No text outside JSON. Use only ASCII characters, use Rs not rupee symbol.
+
+{
+  "mode": "raw",
+  "crop": "${crop}",
+  "lot_number": "${lotData.lot}",
+  "estimated_recovery_pct": 0,
+  "assumed_recovery_pct": ${lotData.recov},
+  "lot_size_qtl": ${lotData.qty},
+  "quoted_price_per_qtl": ${lotData.price},
+  "dal_price_per_kg": 0,
+  "colour_grade": "B",
+  "background_quality": "white",
+  "colour_distribution": [
+    {"key":"g1","label":"Premium grade colour","hex":"#3d7a1e","pct":0,"price_impact":"+Rs0","regions":[{"x1":10,"y1":10,"x2":28,"y2":28},{"x1":55,"y1":20,"x2":72,"y2":38},{"x1":70,"y1":60,"x2":85,"y2":75}]},
+    {"key":"g2","label":"Good grade colour","hex":"#5a9e2f","pct":0,"price_impact":"-Rs80/qtl","regions":[{"x1":20,"y1":45,"x2":38,"y2":60},{"x1":60,"y1":40,"x2":78,"y2":55}]},
+    {"key":"g3","label":"Average grade colour","hex":"#c9b84a","pct":0,"price_impact":"-Rs220/qtl","regions":[{"x1":30,"y1":65,"x2":48,"y2":80},{"x1":55,"y1":60,"x2":72,"y2":75}]},
+    {"key":"g4","label":"Below grade colour","hex":"#8a7040","pct":0,"price_impact":"-Rs400/qtl","regions":[{"x1":15,"y1":70,"x2":32,"y2":85}]}
+  ],
+  "colour_discount_per_qtl": 0,
+  "size_distribution": {"bold_pct":0,"medium_pct":0,"small_pct":0,"uniformity_score":0,"bold_regions":[{"x1":10,"y1":15,"x2":28,"y2":32},{"x1":55,"y1":25,"x2":72,"y2":42}],"medium_regions":[{"x1":30,"y1":40,"x2":48,"y2":57},{"x1":62,"y1":55,"x2":80,"y2":72}],"small_regions":[{"x1":18,"y1":62,"x2":35,"y2":78}]},
+  "yield_breakdown": {"bold_dal_pct":0,"medium_dal_pct":0,"chilka_broken_pct":0,"powder_waste_pct":0},
+  "predicted_dal_colour": "overall expected finished dal colour e.g. bright yellow or pale cream",
+  "predicted_dal_colour_distribution": [
+    {"label":"replace with crop-specific colour grade 1 e.g. Bright golden for chana or Bright yellow for moong","hex":"#hex","pct":0},
+    {"label":"replace with grade 2 e.g. Medium cream","hex":"#hex","pct":0},
+    {"label":"replace with grade 3 e.g. Pale/dull","hex":"#hex","pct":0}
+  ],
+  "predicted_dal_size": "describe expected dal size e.g. bold halves dominant or mixed",
+  "metrics": {"broken_grain_pct":0,"split_white_pct":0,"moisture_pct":0,"shrivelled_pct":0,"impurities_pct":0,"black_spots_pct":0,"weevil_damage_pct":0,"germination_damage_pct":0},
+  "adulteration": {"artificial_colouring_suspected":false,"surface_coating_suspected":false,"oiling_suspected":false,"notes":""},
+  "alerts": [{"type":"warning","title":"short title","message":"one specific action for miller"}],
+  "confidence_pct": 75,
+  "image_quality_note": "one sentence about image quality and background",
+  "lot_meta": {"likely_origin":"region","likely_season":"new crop or old crop","age_estimate":"fresh or 3-6 months or 6-12 months or over 12 months","storage_quality":"good or average or poor","overall_verdict":"2-3 sentences on grade, whether to buy at quoted price, what to negotiate"}
+}
+
+CONSERVATIVE ESTIMATION RULES — READ CAREFULLY:
+- Only report defects you can clearly see in this specific image. If uncertain, report 0-1%.
+- Background colour and shadows are not defects.
+- confidence_pct should be 50-65 for dark background images, 70-85 for white background.
+
+CROP-SPECIFIC DAL COLOUR GRADES (use these exact label names):
+- Chana dal: "Bold golden" (Grade A, bright golden yellow), "Medium golden" (B+, slightly pale), "Pale/dull yellow" (B, faded), "Discoloured" (C, dark patches or grey tones)
+- Moong dhuli: "Bright yellow" (A), "Medium yellow" (B+), "Pale yellow" (B), "Off-white/dull" (C)
+- Toor dal: "Bright orange-yellow" (A), "Medium orange" (B+), "Pale/dull orange" (B), "Discoloured" (C)
+- Urad dhuli: "Bright white" (A), "Cream white" (B+), "Dull cream" (B), "Grey/discoloured" (C)
+- Moong chilka: "Parrot green skin" (A), "Olive green skin" (B+), "Dull/faded skin" (B), "Discoloured skin" (C)
+
+Fill every 0 with real numbers. All pct groups must sum to 100. Coordinates are integers 0-100. ASCII only in all strings.`;
+
+  const procPrompt = `You are QualityEye, an expert grain quality AI trained on Indian mandi grading standards.
+Analyse this ${crop} PROCESSED DAL image. Lot: ${lotData.qty} qtl, ${lotData.loc}, quoted Rs${lotData.price}/qtl, claimed grade: ${lotData.grade || "not stated"}.
+
+DAL TYPE GRADING — TWO-FACE KNOWLEDGE (critical for accurate assessment):
+
+CHILKA DALS (Moong chilka, Urad chilka):
+Each grain has a skin side and a cotyledon (split) side. When spread in a bowl, roughly 50% of visible surfaces show the cream/white cotyledon face — this is completely NORMAL. Do NOT treat the cotyledon face as dull or discoloured. Grade ONLY by the skin-side colour.
+Moong chilka: Parrot green skin = Grade A. Olive = B+. Dull/faded = B. Discoloured = C.
+Key defects: broken halves, fully dehusked pieces (showing no skin at all), black spots ON skin.
+
+DHULI DALS (Moong dhuli, Toor dal, Chana dal, Urad dhuli):
+Both faces of the grain should be the same colour — no skin side distinction.
+- Moong dhuli: both faces bright yellow. Green patches = incomplete dehusking (defect). Pale = old stock.
+- Toor dal: both faces bright orange-yellow. Dark patches = heat damage or age. Uniform bright = Grade A.
+- Chana dal: both faces cream/beige. The suture line (natural ridge) may be slightly darker — that is NORMAL. Other dark patches = defect.
+- Urad dhuli: both faces white/cream. Any grey or black patches = defect.
+
+Background: If dark bowl, evaluate colour relative to grains not background.
+
+Respond ONLY with a JSON object. No text outside JSON. Use only ASCII characters, use Rs not rupee symbol.
+
+{
+  "mode": "proc",
+  "crop": "${crop}",
+  "lot_number": "${lotData.lot}",
+  "lot_size_qtl": ${lotData.qty},
+  "quoted_price_per_qtl": ${lotData.price},
+  "claimed_grade": "${lotData.grade || 'not stated'}",
+  "actual_grade": "B",
+  "grade_matches_claim": true,
+  "colour_grade": "B",
+  "background_quality": "white",
+  "colour_distribution": [
+    {"key":"g1","label":"Premium grade","hex":"#3d7a1e","pct":0,"price_impact":"+Rs0","regions":[{"x1":10,"y1":10,"x2":28,"y2":28},{"x1":55,"y1":20,"x2":72,"y2":38},{"x1":70,"y1":60,"x2":85,"y2":75}]},
+    {"key":"g2","label":"Good grade","hex":"#5a9e2f","pct":0,"price_impact":"-Rs80/qtl","regions":[{"x1":20,"y1":45,"x2":38,"y2":60},{"x1":60,"y1":40,"x2":78,"y2":55}]},
+    {"key":"g3","label":"Average grade","hex":"#c9b84a","pct":0,"price_impact":"-Rs200/qtl","regions":[{"x1":30,"y1":65,"x2":48,"y2":80}]},
+    {"key":"g4","label":"Below grade","hex":"#8a7040","pct":0,"price_impact":"-Rs400/qtl","regions":[{"x1":15,"y1":70,"x2":32,"y2":85}]}
+  ],
+  "colour_discount_per_qtl": 0,
+  "dal_type": "dhuli or chilka — detect from image",
+  "output_mix": [
+    {"key":"bold",     "label":"Whole halves (bold)",  "hex":"#d4a820","pct":0,"price_impact":"+Rs0",      "regions":[{"x1":10,"y1":10,"x2":28,"y2":28},{"x1":55,"y1":30,"x2":72,"y2":48},{"x1":30,"y1":55,"x2":50,"y2":72}]},
+    {"key":"medium",   "label":"Whole halves (med)",   "hex":"#e8d070","pct":0,"price_impact":"-Rs80/qtl", "regions":[{"x1":30,"y1":40,"x2":48,"y2":55},{"x1":65,"y1":20,"x2":82,"y2":38}]},
+    {"key":"broken",   "label":"Broken dal",           "hex":"#EF9F27","pct":0,"price_impact":"-Rs200/qtl","regions":[{"x1":60,"y1":50,"x2":78,"y2":65},{"x1":15,"y1":65,"x2":35,"y2":80}]},
+    {"key":"dehusked", "label":"Dehusked pieces",      "hex":"#8a9e50","pct":0,"price_impact":"-Rs300/qtl","regions":[{"x1":20,"y1":70,"x2":38,"y2":85}]},
+    {"key":"powder",   "label":"Powder/fines",         "hex":"#aaa090","pct":0,"price_impact":"-Rs500/qtl","regions":[]}
+  ],
+  "output_mix_note": "For DHULI dals (moong dhuli, toor, chana dal, urad dhuli): set dehusked pct to 0 — there is no skin. For CHILKA dals (moong chilka, urad chilka): dehusked pieces are grains where skin has fallen off — this IS a defect. All pcts must sum to 100.",
+  "metrics": {"broken_dal_pct":0,"skin_presence_pct":0,"moisture_pct":0,"discoloured_pct":0,"impurities_pct":0,"size_uniformity":0,"lustre_score":0},
+  "adulteration": {"artificial_colouring_suspected":false,"oiling_suspected":false,"mixing_suspected":false,"notes":""},
+  "alerts": [{"type":"warning","title":"short title","message":"one specific action for buyer"}],
+  "confidence_pct": 75,
+  "image_quality_note": "one sentence about image quality",
+  "lot_meta": {"likely_origin":"region","likely_season":"new crop or old crop","age_estimate":"fresh or 3-6 months or 6-12 months or over 12 months","storage_quality":"good or average or poor","overall_verdict":"2-3 sentences on grade, whether to buy at quoted price, what to negotiate"}
+}
+
+CONSERVATIVE ESTIMATION RULES — READ CAREFULLY:
+- Only report defects you can clearly see in this specific image. If uncertain, report 0-1%.
+- Background colour, shadows, and image blur are not defects.
+- Bold grain % should reflect what you actually see — if grains look large and uniform, bold % should be high.
+- Uniformity score should be 70+ if grains look similar in size. Only go lower if you see obvious size variation.
+- confidence_pct should be 50-65 for dark background images, 70-85 for white background.
+
+Fill every 0 with real numbers. Replace ALL region coordinates with real integers 0-100 showing where those size grains actually appear. Replace "Premium grade colour" with the actual crop-specific grade name (for Moong: Parrot green. For Chana: Bright cream. For Tur: Bright orange. For Urad: Clean black. For Masoor: Bright orange). Use the correct hex colour for that crop grade. All pct groups must sum to 100. Coordinates are integers 0-100. ASCII only in all strings.`;
+
+  try {
+    await delay(500); markDone('st5'); setActive('st6');
+
+    // Mask background — send grain-only image to LLM, show original to miller
+    const llmB64 = b64 ? await maskBackground(b64) : b64;
+
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:6000,
+        system: sysPrompt,
+        messages:[{ role:'user', content:[
+          { type:'image', source:{ type:'base64', media_type:'image/jpeg', data:llmB64 } },
+          { type:'text',  text: isProc ? procPrompt : rawPrompt }
+        ]}]
+      })
+    });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error.message);
+    const rawText = (data.content?.find(b=>b.type==='text')?.text||'');
+    console.log('QE response length:', rawText.length, 'preview:', rawText.slice(0,80));
+    // Extract JSON robustly — find first { to last }
+    const jsonStart = rawText.indexOf('{');
+    const jsonEnd   = rawText.lastIndexOf('}');
+    if (jsonStart === -1 || jsonEnd === -1) throw new Error('No JSON in response');
+    let raw = rawText.slice(jsonStart, jsonEnd + 1);
+    // Strip markdown fences
+    raw = raw.replace(/\x60\x60\x60json|\x60\x60\x60/g, '');
+    // Fix common LLM mistakes
+    raw = raw.replace(/(\s*[}\]])/g, '$1');
+    raw = raw.replace(/\u2212/g,'-').replace(/\u2013/g,'-').replace(/\u2014/g,'-').replace(/\u20b9/g,'Rs');
+    // Fix "key">123 or "key"<123 — LLM writes > or < instead of :
+    raw = raw.replace(/"([^"]{1,30})"\s*>\s*(-?[\d])/g, '"$1":$2');
+    raw = raw.replace(/"([^"]{1,30})"\s*<\s*(-?[\d])/g, '"$1":$2');
+    // Fix trailing commas
+    raw = raw.replace(/,\s*([}\]])/g, '$1');
+    let result;
+    try {
+      result = JSON.parse(raw);
+    } catch(e1) {
+      const pos = parseInt((e1.message.match(/position (\d+)/)||[])[1]||'0');
+      console.warn('Parse fail pos', pos, ':', JSON.stringify(raw.slice(Math.max(0,pos-40),pos+40)));
+      // Find last balanced closing brace (handles truncation)
+      let fixed = raw;
+      for (let i = raw.length-1; i > 100; i--) {
+        if (raw[i] === '}') {
+          let d = 0;
+          for (let j = 0; j <= i; j++) { if(raw[j]==='{') d++; else if(raw[j]==='}') d--; }
+          if (d === 0) { fixed = raw.slice(0, i+1); break; }
+        }
+      }
+      try { result = JSON.parse(fixed); }
+      catch(e2) { try { result=(new Function('return ('+fixed+')'))(); } catch(e3) { throw new Error('Parse failed at pos '+pos+' — try scanning again'); } }
+    }
+
+    markDone('st6');
+    await delay(400);
+    lastResult = result;
+    await buildResultScreen(result);
+    document.getElementById('res-badge').textContent = result.crop;
+    document.getElementById('res-badge').className = isProc ? 'pb' : 'pg';
+    document.getElementById('res-btn-margin').className = 'btn-p' + (isProc ? ' proc' : '');
+    goScr('scr-res');
+  } catch(err) {
+    // Log for debugging but show friendly message to miller
+    console.error('QualityEye error:', err.message, err);
+    if (err.message && err.message.includes('JSON')) {
+      showErr('Analysis incomplete — the image was processed but result could not be read. Please try again, ideally with grain on a white surface in good light.');
+    } else if (err.message && (err.message.includes('auth') || err.message.includes('401'))) {
+      showErr('API key error — please contact support to set up your account.');
+    } else if (err.message && err.message.includes('network')) {
+      showErr('No internet connection. Please check your network and try again.');
+    } else {
+      showErr('Analysis failed — please try again. Tip: use a white surface and natural light for best results.');
+    }
+  }
+}
+
+// ─── CANVAS / COLOUR OVERLAY ──────────────────────────────────────────
+let canvasImg = null; // HTMLImageElement
+let canvasEl  = null;
+let colourDist = [];
+
+async function buildResultScreen(r) {
+  if (!r) return;
+  r.lot_meta = r.lot_meta || {};
+  r.metrics = r.metrics || {};
+  r.alerts = r.alerts || [];
+  r.adulteration = r.adulteration || {};
+  r.colour_distribution = r.colour_distribution || [];
+  r.yield_breakdown = r.yield_breakdown || {};
+  r.size_distribution = r.size_distribution || {};
+  r.lot_number = r.lot_number || lotData.lot;
+  r.crop = r.crop || crop;
+  // 1. Draw base image on canvas
+  colourDist = r.colour_distribution || [];
+  activeChip = null;
+
+  const imgSrc = b64 ? 'data:image/jpeg;base64,' + b64 : null;
+  canvasEl = document.getElementById('main-canvas');
+  const ctx = canvasEl.getContext('2d');
+
+  if (imgSrc) {
+    await new Promise(resolve => {
+      canvasImg = new Image();
+      canvasImg.onload = () => {
+        canvasEl.width  = canvasImg.width;
+        canvasEl.height = canvasImg.height;
+        ctx.drawImage(canvasImg, 0, 0);
+        // save clean pixels
+        baseImageData = ctx.getImageData(0, 0, canvasEl.width, canvasEl.height);
+        resolve();
+      };
+      canvasImg.src = imgSrc;
+    });
+  } else {
+    // demo — draw placeholder
+    canvasEl.width = 400; canvasEl.height = 280;
+    ctx.fillStyle = '#1a2010'; ctx.fillRect(0,0,400,280);
+    ctx.fillStyle = 'rgba(255,255,255,.15)'; ctx.font = '13px sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText('Demo — scan a real lot to see your grain image', 200, 140);
+    baseImageData = ctx.getImageData(0, 0, canvasEl.width, canvasEl.height);
+  }
+
+  // 2. Build colour chips
+  buildColourChips(r);
+
+  // 3. Build result body
+  buildResultBody(r);
+}
+
+function buildColourChips(r) {
+  const chips = document.getElementById('cc-chips');
+  const hint  = document.getElementById('cc-hint');
+  chips.innerHTML = '';
+
+  colourDist.forEach((grade, i) => {
+    const chip = document.createElement('div');
+    chip.className = 'cc-chip';
+    chip.id = 'chip-' + grade.key;
+    chip.innerHTML = `<div class="cc-dot" style="background:${grade.hex};"></div><span class="cc-name">${grade.label}</span><span class="cc-pct">${grade.pct}%</span>`;
+    chip.onclick = () => toggleChip(grade.key, grade.hex, grade.regions || [], chip);
+    chips.appendChild(chip);
+  });
+  hint.textContent = 'Tap any grade to see where those grains are in the image above';
+}
+
+function toggleChip(key, hex, regions, chipEl) {
+  if (activeChip === key) {
+    clearOverlay(); return;
+  }
+  activeChip = key;
+  // Reset all chips
+  document.querySelectorAll('.cc-chip').forEach(c => {
+    c.classList.remove('active-chip');
+    c.style.borderColor = '';
+    c.style.background = '';
+  });
+  // Activate chip if present in DOM
+  if (chipEl) {
+    chipEl.classList.add('active-chip');
+    chipEl.style.borderColor = hex;
+    chipEl.style.background = hex + '22';
+  }
+  // Also highlight the crow row if clicking from chip
+  document.querySelectorAll('.crow').forEach(function(r) { r.classList.remove('crow-active'); r.style.background=''; });
+  document.querySelectorAll('.srow').forEach(function(r) { r.classList.remove('om-active'); });
+  // Show clear btn
+  document.getElementById('clear-btn').style.display = 'block';
+  var label = colourDist.find(function(g){return g.key===key;});
+  document.getElementById('ivh-text').textContent = 'Showing: ' + (label ? label.label : key);
+  drawColourOverlay(hex, regions);
+}
+
+function drawColourOverlay(hex, regions) {
+  const ctx = canvasEl.getContext('2d');
+  ctx.putImageData(baseImageData, 0, 0);
+  if (!regions || regions.length === 0) return;
+
+  const w = canvasEl.width, h = canvasEl.height;
+  // Scale to canvas — 1px at 360px display width, capped so never blurry
+  const scale  = w / 360;
+  const lineW  = Math.round(scale * 1.5 * 10) / 10; // e.g. 1.5 at 360px, 4 at 960px
+  const radius = Math.round(scale * 5);
+
+  ctx.fillStyle = 'rgba(0,0,0,0.48)';
+  ctx.fillRect(0, 0, w, h);
+
+  function rr(x1, y1, x2, y2, r) {
+    ctx.beginPath();
+    ctx.moveTo(x1+r, y1);
+    ctx.lineTo(x2-r, y1); ctx.arcTo(x2,y1,x2,y1+r,r);
+    ctx.lineTo(x2, y2-r); ctx.arcTo(x2,y2,x2-r,y2,r);
+    ctx.lineTo(x1+r, y2); ctx.arcTo(x1,y2,x1,y2-r,r);
+    ctx.lineTo(x1, y1+r); ctx.arcTo(x1,y1,x1+r,y1,r);
+    ctx.closePath();
+  }
+
+  regions.forEach(reg => {
+    const x1 = reg.x1/100 * w, y1 = reg.y1/100 * h;
+    const x2 = reg.x2/100 * w, y2 = reg.y2/100 * h;
+    const rw = x2-x1, rh = y2-y1;
+    if (rw <= 0 || rh <= 0) return;
+
+    // Reveal original pixels inside box
+    ctx.save();
+    rr(x1, y1, x2, y2, radius);
+    ctx.clip();
+    ctx.putImageData(baseImageData, 0, 0, x1, y1, rw, rh);
+    ctx.restore();
+
+    // Single crisp border — NO shadow, NO blur
+    ctx.save();
+    ctx.shadowBlur = 0;
+    ctx.shadowColor = 'transparent';
+    rr(x1, y1, x2, y2, radius);
+    ctx.strokeStyle = hex;
+    ctx.lineWidth = lineW;
+    ctx.stroke();
+    ctx.restore();
+  });
+}
+
+function clearOverlay() {
+  activeChip = null;
+  document.querySelectorAll('.crow').forEach(function(r) { r.classList.remove('crow-active'); r.style.background=''; });
+  document.querySelectorAll('.srow').forEach(function(r) { r.classList.remove('om-active'); });
+  document.querySelectorAll('.cc-chip').forEach(c => {
+    c.classList.remove('active-chip');
+    c.style.borderColor = '';
+    c.style.background = '';
+  });
+  document.querySelectorAll('.om-row').forEach(r => r.classList.remove('om-active'));
+  document.getElementById('clear-btn').style.display = 'none';
+  document.getElementById('ivh-text').textContent = 'Tap a colour chip below to highlight those grains';
+  if (baseImageData && canvasEl) {
+    canvasEl.getContext('2d').putImageData(baseImageData, 0, 0);
+  }
+}
+
+// ─── RESULT BODY ──────────────────────────────────────────────────────
+function buildResultBody(r) {
+  const isProc = r.mode === 'proc';
+  const mt = r.lot_meta || {};
+  const ad = r.adulteration || {};
+
+  // Alerts
+  const adulAlerts = [];
+  if (ad.artificial_colouring_suspected) adulAlerts.push({type:'danger',title:'Artificial colouring suspected',message:'Request water wash test before purchasing.'});
+  if (ad.surface_coating_suspected)      adulAlerts.push({type:'danger',title:'Surface coating detected',message:'Unusual surface sheen — possible wax/oil coating to mask quality.'});
+  if (ad.oiling_suspected)               adulAlerts.push({type:'warning',title:'Oiling suspected',message:'Grain appears artificially glossy — common technique to mask age.'});
+  if (isProc && ad.mixing_suspected)     adulAlerts.push({type:'warning',title:'Grade mixing suspected',message:'Colour inconsistency suggests grains from multiple batches mixed together.'});
+  const allAlerts = [...adulAlerts, ...(r.alerts||[])];
+
+  const alertsHtml = allAlerts.map(a=>`
+    <div class="al-box al-${a.type==='danger'?'d':a.type==='warning'?'w':'i'}">
+      <div class="al-ic">${a.type==='danger'?'⚠️':a.type==='warning'?'⚡':'ℹ️'}</div>
+      <div><div class="al-title">${a.title}</div><div class="al-body">${a.message}</div></div>
+    </div>`).join('');
+
+  const dots = [1,2,3,4,5].map(i=>`<div class="${i<=Math.round(r.confidence_pct/20)?'don':'doff'}"></div>`).join('');
+  const mStat = (v,lo,hi) => v<=lo?['ok','Good']:v<=hi?['warn','Elevated']:['bad','High — flag'];
+  const mBar  = (v,max) => {
+    const p = Math.min(v/max*100,100).toFixed(0);
+    const c = v<=max*.35?'var(--gl)':v<=max*.65?'#EF9F27':'var(--rd)';
+    return `<div class="mb2" style="width:${p}%;background:${c};"></div>`;
+  };
+
+  // IMAGE QUALITY NOTE
+  const iqNote = r.image_quality_note ? `
+    <div class="al-box al-i" style="margin:10px 16px 0;">
+      <div class="al-ic">📷</div>
+      <div><div class="al-title">Image note</div><div class="al-body">${r.image_quality_note}</div></div>
+    </div>` : '';
+
+  let bodyHtml = ``;
+
+  // MODE BANNER
+  bodyHtml += `
+    <div class="mode-banner ${isProc?'mb-proc':'mb-raw'}">
+      <div class="mb-ic">${isProc?'🟡':'🌾'}</div>
+      <div>
+        <div class="mb-title">${isProc?'Processed dal analysis':'Raw material analysis'}</div>
+        <div class="mb-sub">${isProc?'Buying '+r.crop+' dal — assessing output grade':'Buying whole '+r.crop+' — assessing milling value'}</div>
+      </div>
+    </div>`;
+
+  if (!isProc) {
+    // ─── RAW MODE ───────────────────────────────────────────────────
+    const recovDiff = r.estimated_recovery_pct - r.assumed_recovery_pct;
+    const impactRaw = (recovDiff/100) * r.lot_size_qtl * 100 * r.dal_price_per_kg;
+    const impactAbs = Math.abs(Math.round(impactRaw));
+    const sign = impactRaw < 0 ? '−' : '+';
+    const impStr = sign + '₹' + (impactAbs>=100000?(impactAbs/100000).toFixed(1)+'L':Math.round(impactAbs/1000)+'K');
+    const impColor = impactRaw < 0 ? 'var(--rd)' : 'var(--gm)';
+
+    // Recovery
+    bodyHtml += `
+      <div class="rec-block rec-raw">
+        <div>
+          <div class="rl-lbl">Estimated recovery</div>
+          <div class="rl-val">${(r.estimated_recovery_pct||0).toFixed(1)}%</div>
+          <div class="rl-sub">vs your ${r.assumed_recovery_pct}% assumption</div>
+        </div>
+        <div>
+          <div class="rr-lbl">Recovery impact · ${r.lot_size_qtl} qtl</div>
+          <div class="rr-val" style="color:${impColor};">${impStr}</div>
+          <div class="rr-note">at ₹${r.dal_price_per_kg}/kg dal</div>
+        </div>
+      </div>`;
+
+    // Colour grading
+    const cd = r.colour_distribution || [];
+    bodyHtml += `
+      <div class="dcard">
+        <div class="dcard-hdr"><span class="dcard-t">Colour grading</span><span class="dcard-b">Grade ${r.colour_grade}</span></div>
+        <div class="sbar">${cd.map(c=>`<div class="sbar-s" style="flex:${c.pct||0.5};background:${c.hex};"></div>`).join('')}</div>
+        <div class="crow-w">
+          ${cd.map(c=>`
+            <div class="crow" style="cursor:pointer;" onclick="tapCrow('${c.key}',this)">
+              <div class="cdot" style="background:${c.hex};"></div>
+              <span class="cname">${c.label}</span>
+              <div class="cbar-w"><div class="cbar" style="width:${c.pct}%;background:${c.hex};"></div></div>
+              <span class="cpct">${c.pct}%</span>
+              <span class="cimp" style="color:${c.price_impact?.startsWith('+')?'var(--gm)':'var(--am)'};">${c.price_impact}</span>
+              <span style="font-size:16px;color:var(--t3);flex-shrink:0;">&#8250;</span>
+            </div>`).join('')}
+        </div>
+        <div class="dvdr"></div>
+        <div class="imp-row"><span class="imp-lbl">Blended colour discount</span><span class="imp-val" style="color:var(--rd);">−₹${r.colour_discount_per_qtl||0}/qtl</span></div>
+        <div class="imp-row" style="margin-top:5px;"><span class="imp-lbl">Total lot (${r.lot_size_qtl} qtl)</span><span class="imp-val" style="color:var(--rd);">−₹${Math.round((r.colour_discount_per_qtl||0)*r.lot_size_qtl/1000)}K</span></div>
+      </div>`;
+
+    // Size
+    const sd = r.size_distribution || {};
+    // Store size regions globally for tap handler
+    window._sizeRegions = {
+      'sz-bold':   sd.bold_regions   || [],
+      'sz-medium': sd.medium_regions || [],
+      'sz-small':  sd.small_regions  || []
+    };
+    bodyHtml += `
+      <div class="size-card" id="raw-size-card">
+        <div class="dcard-hdr" style="margin-bottom:8px;"><span class="dcard-t">Size grading</span><span class="dcard-b">Uniformity ${sd.uniformity_score||'—'}/100</span></div>
+        <div style="display:flex;height:13px;border-radius:6px;overflow:hidden;gap:2px;margin-bottom:10px;">
+          <div style="flex:${sd.bold_pct||1};background:var(--gm);"></div>
+          <div style="flex:${sd.medium_pct||1};background:#97C459;"></div>
+          <div style="flex:${sd.small_pct||1};background:#EF9F27;"></div>
+        </div>
+        <div class="srow om-row" onclick="tapSzRow('sz-bold','#3B6D11',this)"><div class="sdot" style="background:var(--gm);"></div><span class="snm">Bold</span><div class="sbar2-w"><div class="sbar2" style="width:${sd.bold_pct||0}%;background:var(--gm);"></div></div><span class="spct">${sd.bold_pct||0}%</span><span class="srate" style="color:var(--gm);">+Rs0</span></div>
+        <div class="srow om-row" onclick="tapSzRow('sz-medium','#97C459',this)"><div class="sdot" style="background:#97C459;"></div><span class="snm">Medium</span><div class="sbar2-w"><div class="sbar2" style="width:${sd.medium_pct||0}%;background:#97C459;"></div></div><span class="spct">${sd.medium_pct||0}%</span><span class="srate" style="color:var(--am);">-Rs80/qtl</span></div>
+        <div class="srow om-row" onclick="tapSzRow('sz-small','#EF9F27',this)"><div class="sdot" style="background:#EF9F27;"></div><span class="snm">Small</span><div class="sbar2-w"><div class="sbar2" style="width:${sd.small_pct||0}%;background:#EF9F27;"></div></div><span class="spct">${sd.small_pct||0}%</span><span class="srate" style="color:var(--rd);">-Rs160/qtl</span></div>
+      </div>`;
+
+    // Yield
+    const yb = r.yield_breakdown || {};
+    bodyHtml += `
+      <div class="dcard">
+        <div class="dcard-hdr" id="raw-yield-hdr"><span class="dcard-t">Expected mill output</span></div>
+        <div class="yrow-w">
+          <div class="yrow"><span class="ylbl">Bold dal (grade A)</span><div class="ybar-w"><div class="ybar" style="width:${yb.bold_dal_pct||0}%;background:var(--gl);"></div></div><span class="ypct">${yb.bold_dal_pct||0}%</span></div>
+          <div class="yrow"><span class="ylbl">Medium dal</span><div class="ybar-w"><div class="ybar" style="width:${yb.medium_dal_pct||0}%;background:#97C459;"></div></div><span class="ypct">${yb.medium_dal_pct||0}%</span></div>
+          <div class="yrow"><span class="ylbl">Chilka / broken</span><div class="ybar-w"><div class="ybar" style="width:${yb.chilka_broken_pct||0}%;background:#EF9F27;"></div></div><span class="ypct">${yb.chilka_broken_pct||0}%</span></div>
+          <div class="yrow"><span class="ylbl">Powder / waste</span><div class="ybar-w"><div class="ybar" style="width:${yb.powder_waste_pct||0}%;background:var(--rd);"></div></div><span class="ypct">${yb.powder_waste_pct||0}%</span></div>
+        </div>
+      </div>`;
+
+    // Prediction card — predicted dal output
+    const recovDiffPred = (r.estimated_recovery_pct||0) - (r.assumed_recovery_pct||65);
+    const impactRawPred = (recovDiffPred/100) * (r.lot_size_qtl||0) * 100 * (r.dal_price_per_kg||0);
+    const impAbsPred    = Math.abs(Math.round(impactRawPred));
+    const impSignPred   = impactRawPred < 0 ? '-' : '+';
+    const impStrPred    = impSignPred + 'Rs' + (impAbsPred>=100000?(impAbsPred/100000).toFixed(1)+'L':Math.round(impAbsPred/1000)+'K');
+    const impColorPred  = impactRawPred < 0 ? 'var(--rd)' : 'var(--gm)';
+    bodyHtml += `
+      <div class="dcard" id="prediction-card">
+        <div class="dcard-hdr"><span class="dcard-t">Predicted dal output</span></div>
+        <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--t2);margin-bottom:8px;">Expected dal colour</div>
+        ${(r.predicted_dal_colour_distribution||[]).map(function(g){
+          return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;">'
+            +'<div style="width:14px;height:14px;border-radius:3px;flex-shrink:0;background:'+g.hex+';border:1px solid var(--bd);"></div>'
+            +'<span style="font-size:13px;color:var(--t);flex:1;">'+g.label+'</span>'
+            +'<div style="width:80px;height:5px;background:var(--sf);border-radius:3px;flex-shrink:0;">'
+              +'<div style="width:'+g.pct+'%;height:5px;border-radius:3px;background:'+g.hex+';"></div></div>'
+            +'<span style="font-size:13px;font-weight:600;font-family:var(--mono);width:34px;text-align:right;flex-shrink:0;">'+g.pct+'%</span>'
+            +'</div>';
+        }).join('')}
+        <div style="font-size:12px;color:var(--t2);margin-top:4px;margin-bottom:12px;">${r.predicted_dal_size||'—'}</div>
+        <div class="dvdr"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding-top:8px;">
+          <div>
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--gm);margin-bottom:3px;">Estimated recovery</div>
+            <div style="font-size:28px;font-weight:600;color:var(--gt);font-family:var(--mono);">${(r.estimated_recovery_pct||0).toFixed(1)}%</div>
+            <div style="font-size:11px;color:var(--gm);margin-top:2px;">vs your ${r.assumed_recovery_pct||65}% assumption</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:${impColorPred};margin-bottom:3px;">Impact · ${r.lot_size_qtl||0} qtl</div>
+            <div style="font-size:20px;font-weight:600;font-family:var(--mono);color:${impColorPred};">${impStrPred}</div>
+            <div style="font-size:11px;color:var(--t2);margin-top:2px;">at Rs${r.dal_price_per_kg||0}/kg dal</div>
+          </div>
+        </div>
+      </div>`;
+
+    // Metrics
+    const m = r.metrics || {};
+    const [brC,brL]=mStat(m.broken_grain_pct||0,4,8);
+    const [moC,moL]=mStat(m.moisture_pct||0,12,14);
+    const [shC,shL]=mStat(m.shrivelled_pct||0,3,6);
+    const [imC,imL]=mStat(m.impurities_pct||0,2,4);
+    const [bsC,bsL]=mStat(m.black_spots_pct||0,2,5);
+    const [wvC,wvL]=mStat(m.weevil_damage_pct||0,0.5,2);
+    const [gdC,gdL]=mStat(m.germination_damage_pct||0,1,3);
+    bodyHtml += `
+      <div class="mgrid">
+        <div class="mc"><div class="ml">Broken grain</div><div class="mv">${(m.broken_grain_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.broken_grain_pct||0,15)}</div><div class="ms ${brC}">${brL}</div></div>
+        <div class="mc"><div class="ml">Moisture</div><div class="mv">${(m.moisture_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.moisture_pct||0,18)}</div><div class="ms ${moC}">${moL}</div></div>
+        <div class="mc"><div class="ml">Black spots</div><div class="mv">${(m.black_spots_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.black_spots_pct||0,10)}</div><div class="ms ${bsC}">${bsL}</div></div>
+        <div class="mc"><div class="ml">Shrivelled</div><div class="mv">${(m.shrivelled_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.shrivelled_pct||0,12)}</div><div class="ms ${shC}">${shL}</div></div>
+        <div class="mc"><div class="ml">Impurities</div><div class="mv">${(m.impurities_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.impurities_pct||0,8)}</div><div class="ms ${imC}">${imL}</div></div>
+        <div class="mc"><div class="ml">Weevil damage</div><div class="mv">${(m.weevil_damage_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.weevil_damage_pct||0,5)}</div><div class="ms ${wvC}">${wvL}</div></div>
+        <div class="mc"><div class="ml">Germination</div><div class="mv">${(m.germination_damage_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.germination_damage_pct||0,6)}</div><div class="ms ${gdC}">${gdL}</div></div>
+        <div class="mc"><div class="ml">Colour grade</div><div class="mv">${r.colour_grade}</div><div class="mb-w"><div class="mb2" style="width:${r.colour_grade==='A'?92:r.colour_grade==='B+'?72:r.colour_grade==='B'?50:28}%;background:var(--gl);"></div></div><div class="ms ok">${r.colour_grade==='A'?'Premium':r.colour_grade==='B+'?'Good':r.colour_grade==='B'?'Average':'Below avg'}</div></div>
+      </div>`;
+
+  } else {
+    // ─── PROCESSED MODE ─────────────────────────────────────────────
+    const gradeMatch = r.grade_matches_claim;
+    if (r.claimed_grade && r.claimed_grade !== 'not stated') {
+      bodyHtml += `
+        <div class="al-box ${gradeMatch?'al-i':'al-d'}" style="margin:10px 16px 0;">
+          <div class="al-ic">${gradeMatch?'✅':'⚠️'}</div>
+          <div>
+            <div class="al-title">Grade claim: ${r.claimed_grade} → Actual: ${r.actual_grade}</div>
+            <div class="al-body">${gradeMatch?'Grade matches claim — pricing appears appropriate.':'Actual grade is lower than claimed. Negotiate based on actual grade '+r.actual_grade+'.'}</div>
+          </div>
+        </div>`;
+    }
+
+    // Price impact
+    const priceDiff = lotData.price > 0 ? 0 : 0; // placeholder
+    bodyHtml += `
+      <div class="rec-block rec-proc">
+        <div>
+          <div class="rl-lbl">Actual grade</div>
+          <div class="rl-val">${r.actual_grade || r.colour_grade}</div>
+          <div class="rl-sub">${r.claimed_grade&&r.claimed_grade!=='not stated'?'Claimed: '+r.claimed_grade:'Based on visual analysis'}</div>
+        </div>
+        <div>
+          <div class="rr-lbl">Colour discount</div>
+          <div class="rr-val" style="color:${(r.colour_discount_per_qtl||0)>0?'var(--rd)':'var(--gm)'};">${r.colour_discount_per_qtl>0?'−':''}₹${r.colour_discount_per_qtl||0}/qtl</div>
+          <div class="rr-note">vs Grade A reference</div>
+        </div>
+      </div>`;
+
+    // Colour grading
+    const cd = r.colour_distribution || [];
+    bodyHtml += `
+      <div class="dcard">
+        <div class="dcard-hdr"><span class="dcard-t">Colour grading</span><span class="dcard-b">Grade ${r.colour_grade}</span></div>
+        <div class="sbar">${cd.map(c=>`<div class="sbar-s" style="flex:${c.pct||0.5};background:${c.hex};"></div>`).join('')}</div>
+        <div class="crow-w">
+          ${cd.map(c=>`
+            <div class="crow" style="cursor:pointer;" onclick="tapCrow('${c.key}',this)">
+              <div class="cdot" style="background:${c.hex};"></div>
+              <span class="cname">${c.label}</span>
+              <div class="cbar-w"><div class="cbar" style="width:${c.pct}%;background:${c.hex};"></div></div>
+              <span class="cpct">${c.pct}%</span>
+              <span class="cimp" style="color:${c.price_impact?.startsWith('+')?'var(--gm)':'var(--am)'};">${c.price_impact}</span>
+              <span style="font-size:16px;color:var(--t3);flex-shrink:0;">&#8250;</span>
+            </div>`).join('')}
+        </div>
+        <div class="dvdr"></div>
+        <div class="imp-row"><span class="imp-lbl">Blended colour discount</span><span class="imp-val" style="color:var(--rd);">−₹${r.colour_discount_per_qtl||0}/qtl</span></div>
+        <div class="imp-row" style="margin-top:5px;"><span class="imp-lbl">Total lot (${r.lot_size_qtl} qtl)</span><span class="imp-val" style="color:var(--rd);">−₹${Math.round((r.colour_discount_per_qtl||0)*r.lot_size_qtl/1000)}K</span></div>
+      </div>`;
+
+    // Output mix — tappable rows
+    // Filter output_mix based on dal type — remove dehusked for dhuli dals
+    var dalType = (r.dal_type || '').toLowerCase();
+    var isChilka = dalType.indexOf('chilka') !== -1;
+    var omAll = Array.isArray(r.output_mix) ? r.output_mix : [];
+    const om = omAll.filter(function(item) {
+      if (item.key === 'dehusked') return isChilka;
+      if (item.key === 'skin') return false; // never show skin — replaced by dehusked
+      return true;
+    });
+    // Store output mix in global for overlay toggle
+    window._outputMix = om;
+    const omTotal = om.reduce((s,x)=>s+(x.pct||0),0)||100;
+    bodyHtml += `
+      <div class="dcard">
+        <div class="dcard-hdr">
+          <span class="dcard-t">Output mix</span>
+          <span class="dcard-b" style="color:#4338ca;font-size:10px;">Tap row to highlight on image</span>
+        </div>
+        <div class="om-rows">
+          ${om.map(item => `
+            <div class="om-row" id="omrow-${item.key}" onclick="toggleOmRow('${item.key}','${item.hex}',window._outputMix.find(x=>x.key==='${item.key}')?.regions||[],this)">
+              <div class="om-left">
+                <div class="om-dot" style="background:${item.hex};"></div>
+                <span class="om-lbl">${item.label}</span>
+              </div>
+              <div class="om-mid">
+                <div class="om-bar-w"><div class="om-bar" style="width:${Math.round((item.pct||0)/omTotal*100)}%;background:${item.hex};"></div></div>
+              </div>
+              <span class="om-pct">${item.pct||0}%</span>
+              <span class="om-price" style="color:${(item.price_impact||'').startsWith('+')?'var(--gm)':'var(--am)'};">${(item.price_impact||'').replace('Rs','₹')}</span>
+              <span class="om-tap-hint">👆</span>
+            </div>`).join('')}
+        </div>
+      </div>`;
+
+    // Processed metrics
+    const m = r.metrics || {};
+    const [brC,brL]=mStat(m.broken_dal_pct||0,5,12);
+    const [skC,skL]=mStat(m.skin_presence_pct||0,1,3);
+    const [moC,moL]=mStat(m.moisture_pct||0,11,13);
+    const [dcC,dcL]=mStat(m.discoloured_pct||0,3,8);
+    const [imC,imL]=mStat(m.impurities_pct||0,1,3);
+    bodyHtml += `
+      <div class="mgrid">
+        <div class="mc"><div class="ml">Broken dal</div><div class="mv">${(m.broken_dal_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.broken_dal_pct||0,20)}</div><div class="ms ${brC}">${brL}</div></div>
+        <div class="mc"><div class="ml">Skin presence</div><div class="mv">${(m.skin_presence_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.skin_presence_pct||0,8)}</div><div class="ms ${skC}">${skL}</div></div>
+        <div class="mc"><div class="ml">Moisture</div><div class="mv">${(m.moisture_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.moisture_pct||0,16)}</div><div class="ms ${moC}">${moL}</div></div>
+        <div class="mc"><div class="ml">Discoloured</div><div class="mv">${(m.discoloured_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.discoloured_pct||0,15)}</div><div class="ms ${dcC}">${dcL}</div></div>
+        <div class="mc"><div class="ml">Impurities</div><div class="mv">${(m.impurities_pct||0).toFixed(1)}%</div><div class="mb-w">${mBar(m.impurities_pct||0,6)}</div><div class="ms ${imC}">${imL}</div></div>
+        <div class="mc"><div class="ml">Size uniformity</div><div class="mv">${m.size_uniformity||'—'}</div><div class="mb-w"><div class="mb2" style="width:${m.size_uniformity||0}%;background:${(m.size_uniformity||0)>70?'var(--gl)':(m.size_uniformity||0)>50?'#EF9F27':'var(--rd)'};"></div></div><div class="ms ${(m.size_uniformity||0)>70?'ok':(m.size_uniformity||0)>50?'warn':'bad'}">${(m.size_uniformity||0)>70?'Consistent':'Mixed'}</div></div>
+        <div class="mc"><div class="ml">Lustre score</div><div class="mv">${m.lustre_score||'—'}</div><div class="mb-w"><div class="mb2" style="width:${m.lustre_score||0}%;background:${(m.lustre_score||0)>70?'var(--gl)':(m.lustre_score||0)>50?'#EF9F27':'var(--rd)'};"></div></div><div class="ms ${(m.lustre_score||0)>70?'ok':(m.lustre_score||0)>50?'warn':'bad'}">${(m.lustre_score||0)>70?'Good':r.colour_grade==='B+'?'Average':'Low'}</div></div>
+        <div class="mc"><div class="ml">Colour grade</div><div class="mv">${r.colour_grade}</div><div class="mb-w"><div class="mb2" style="width:${r.colour_grade==='A'?92:r.colour_grade==='B+'?72:r.colour_grade==='B'?50:28}%;background:var(--gl);"></div></div><div class="ms ok">${r.colour_grade==='A'?'Premium':r.colour_grade==='B+'?'Good':r.colour_grade==='B'?'Average':'Below avg'}</div></div>
+      </div>`;
+  }
+
+  // SHARED BOTTOM — confidence, pills, verdict
+  const pills = [
+    `<span class="lp">${r.crop}</span>`,
+    `<span class="lp ${isProc?'lp-b':''}">${isProc?'Processed dal':'Raw material'}</span>`,
+    mt.likely_origin ? `<span class="lp">${mt.likely_origin}</span>` : '',
+    mt.likely_season ? `<span class="lp">${mt.likely_season}</span>` : '',
+    mt.age_estimate  ? `<span class="lp">${mt.age_estimate}</span>`  : '',
+    mt.storage_quality==='poor'?`<span class="lp lp-r">Poor storage</span>`:'',
+    (r.adulteration?.artificial_colouring_suspected||r.adulteration?.oiling_suspected)?`<span class="lp lp-r">Adulteration flag</span>`:'',
+  ].filter(Boolean).join('');
+
+  bodyHtml += `
+    <div class="conf-row">
+      <span class="conf-lbl">Model confidence</span>
+      <div class="dots">${dots}</div>
+      <span class="conf-num">${r.confidence_pct}%</span>
+    </div>
+    <div class="lpills">${pills}</div>
+    <div class="verdict">
+      <div class="vl">Lot ${r.lot_number||lotData.lot} · ${lotData.loc}</div>
+      <div class="vt">${mt.overall_verdict||'—'}</div>
+    </div>
+    ${alertsHtml}
+    ${iqNote}`;
+
+  document.getElementById('res-body').innerHTML = bodyHtml;
+  // Build tabs and organise content
+  _currentMode = r.mode || 'raw';
+  buildTabBar(_currentMode === 'proc');
+  organizeIntoTabs();
+}
+
+
+// ─── OUTPUT MIX ROW TOGGLE ────────────────────────────────────────────
+function toggleOmRow(key, hex, regions, rowEl) {
+  // If same row tapped again — clear
+  if (activeChip === 'om_' + key) {
+    clearOverlay();
+    document.querySelectorAll('.om-row').forEach(r => r.classList.remove('om-active'));
+    return;
+  }
+  // Clear colour chips
+  document.querySelectorAll('.cc-chip').forEach(c => {
+    c.classList.remove('active-chip');
+    c.style.borderColor = '';
+    c.style.background = '';
+  });
+  // Clear other om rows
+  document.querySelectorAll('.om-row').forEach(r => r.classList.remove('om-active'));
+  // Activate this row
+  rowEl.classList.add('om-active');
+  activeChip = 'om_' + key;
+  document.getElementById('clear-btn').style.display = 'block';
+  const label = window._outputMix?.find(x=>x.key===key)?.label || key;
+  document.getElementById('ivh-text').textContent = 'Showing: ' + label;
+  // image is sticky — always visible
+  drawColourOverlay(hex, regions);
+}
+
+
+// ─── COLOUR ROW TAP ──────────────────────────────────────────────────────
+function tapCrow(key, rowEl) {
+  var grade = colourDist.find(function(g) { return g.key === key; });
+  if (!grade) return;
+  // If same row tapped again — clear
+  if (activeChip === key) { clearOverlay(); return; }
+  // Clear other crow + chip highlights
+  document.querySelectorAll('.crow').forEach(function(r) { r.classList.remove('crow-active'); });
+  document.querySelectorAll('.cc-chip').forEach(function(c) {
+    c.classList.remove('active-chip'); c.style.borderColor=''; c.style.background='';
+  });
+  // Highlight this row
+  if (rowEl) rowEl.classList.add('crow-active');
+  // Sync the chip too if visible
+  var chip = document.getElementById('chip-' + key);
+  if (chip) { chip.classList.add('active-chip'); chip.style.borderColor=grade.hex; chip.style.background=grade.hex+'22'; }
+  // Set state
+  activeChip = key;
+  document.getElementById('clear-btn').style.display = 'block';
+  document.getElementById('ivh-text').textContent = 'Showing: ' + grade.label;
+  drawColourOverlay(grade.hex, grade.regions || []);;
+}
+
+// ─── SIZE CHIPS ──────────────────────────────────────────────────────────
+function buildSizeChips() {
+  var chips = document.getElementById('cc-chips');
+  var hint  = document.getElementById('cc-hint');
+  var label = document.getElementById('cc-label-txt');
+  if (!chips) return;
+  if (label) label.textContent = 'Tap to highlight on image →';
+  var szItems = [
+    {key:'sz-bold',   label:'Bold',   hex:'#3B6D11'},
+    {key:'sz-medium', label:'Medium', hex:'#97C459'},
+    {key:'sz-small',  label:'Small',  hex:'#EF9F27'},
+  ];
+  var sd = (lastResult && lastResult.size_distribution) || {};
+  var pcts = {
+    'sz-bold':   sd.bold_pct   || 0,
+    'sz-medium': sd.medium_pct || 0,
+    'sz-small':  sd.small_pct  || 0,
+  };
+  chips.innerHTML = '';
+  szItems.forEach(function(item) {
+    var chip = document.createElement('div');
+    chip.className = 'cc-chip';
+    chip.id = 'chip-' + item.key;
+    chip.innerHTML = '<div class="cc-dot" style="background:'+item.hex+';"></div>'
+      +'<span class="cc-name">'+item.label+'</span>'
+      +'<span class="cc-pct">'+pcts[item.key]+'%</span>';
+    chip.onclick = function() { tapSzRow(item.key, item.hex, null); };
+    chips.appendChild(chip);
+  });
+  if (hint) hint.textContent = 'Tap any size to see where those grains are';
+}
+
+// ─── SIZE ROW TAP ─────────────────────────────────────────────────────────
+function tapSzRow(key, hex, rowEl) {
+  var regions = (window._sizeRegions || {})[key] || [];
+  // Toggle — same key tapped again clears
+  if (activeChip === 'sz_' + key) {
+    clearOverlay();
+    document.querySelectorAll('.srow').forEach(function(r) { r.classList.remove('om-active'); });
+    return;
+  }
+  // Clear all highlights
+  document.querySelectorAll('.cc-chip').forEach(function(c) {
+    c.classList.remove('active-chip'); c.style.borderColor=''; c.style.background='';
+  });
+  document.querySelectorAll('.srow').forEach(function(r) { r.classList.remove('om-active'); });
+  document.querySelectorAll('.om-row').forEach(function(r) { r.classList.remove('om-active'); });
+  // Activate this row
+  if (rowEl) rowEl.classList.add('om-active');
+  // Sync size chip if visible
+  var chip = document.getElementById('chip-' + key);
+  if (chip) { chip.classList.add('active-chip'); chip.style.borderColor=hex; chip.style.background=hex+'22'; }
+  activeChip = 'sz_' + key;
+  document.getElementById('clear-btn').style.display = 'block';
+  var labels = {'sz-bold':'Bold grains','sz-medium':'Medium grains','sz-small':'Small grains'};
+  document.getElementById('ivh-text').textContent = 'Showing: ' + (labels[key] || key);
+  drawColourOverlay(hex, regions);
+}
+
+// ─── TAB SYSTEM ───────────────────────────────────────────────────────────
+var _currentMode = 'raw';
+var _activeTab = '';
+
+var RAW_TABS  = [{k:'colour',l:'Colour'},{k:'output',l:'Size & Grade'},{k:'prediction',l:'Prediction'},{k:'metrics',l:'Metrics'},{k:'verdict',l:'Verdict'}];
+var PROC_TABS = [{k:'colour',l:'Colour'},{k:'output',l:'Output mix'},{k:'metrics',l:'Metrics'},{k:'verdict',l:'Verdict'}];
+
+function buildTabBar(isProc) {
+  var tabs = isProc ? PROC_TABS : RAW_TABS;
+  _activeTab = tabs[0].k;
+  var bar = document.getElementById('res-tabs');
+  if (!bar) return;
+  bar.innerHTML = tabs.map(function(t) {
+    var cls = t.k === _activeTab ? (isProc ? ' on-proc' : ' on') : '';
+    return ['<div class="rtab'+cls+'" data-tab="'+t.k+'" onclick="switchTabEl(this)">',t.l,'</div>'].join('');
+  }).join('');
+  // Set initial chip visibility based on first tab
+  updateChipVisibility(_activeTab);
+}
+
+function updateChipVisibility(tab) {
+  var chipsWrap = document.getElementById('colour-chips-wrap');
+  if (!chipsWrap) return;
+  if (tab === 'colour') {
+    chipsWrap.style.display = '';
+    buildColourChips(lastResult);
+  } else if (tab === 'output' && _currentMode === 'raw') {
+    chipsWrap.style.display = '';
+    buildSizeChips();
+  } else if (tab === 'output' && _currentMode === 'proc') {
+    chipsWrap.style.display = '';
+    buildOutputMixChips();
+  } else {
+    chipsWrap.style.display = 'none';
+  }
+}
+
+function buildOutputMixChips() {
+  var chips = document.getElementById('cc-chips');
+  var hint  = document.getElementById('cc-hint');
+  var label = document.getElementById('cc-label-txt');
+  if (!chips) return;
+  if (label) label.textContent = 'Tap to highlight on image →';
+  var om = window._outputMix || [];
+  chips.innerHTML = '';
+  om.forEach(function(item) {
+    if (!item.key || item.key.indexOf('sz-') === 0) return; // skip size items
+    var chip = document.createElement('div');
+    chip.className = 'cc-chip';
+    chip.id = 'chip-om-' + item.key;
+    chip.innerHTML = '<div class="cc-dot" style="background:'+item.hex+';border-radius:2px;"></div>'
+      +'<span class="cc-name">'+(item.label||item.key)+'</span>'
+      +'<span class="cc-pct">'+(item.pct||0)+'%</span>';
+    chip.onclick = function() {
+      // Clear other chips
+      document.querySelectorAll('.cc-chip').forEach(function(c){
+        c.classList.remove('active-chip'); c.style.borderColor=''; c.style.background='';
+      });
+      document.querySelectorAll('.om-row').forEach(function(r){ r.classList.remove('om-active'); });
+      if (activeChip === 'om_'+item.key) { clearOverlay(); return; }
+      chip.classList.add('active-chip');
+      chip.style.borderColor = item.hex;
+      chip.style.background  = item.hex + '22';
+      activeChip = 'om_'+item.key;
+      document.getElementById('clear-btn').style.display = 'block';
+      document.getElementById('ivh-text').textContent = 'Showing: ' + (item.label||item.key);
+      drawColourOverlay(item.hex, item.regions || []);
+    };
+    chips.appendChild(chip);
+  });
+  if (hint) hint.textContent = 'Tap any row or chip to highlight on image';
+}
+
+function switchTabEl(el) {
+  var tab = el.getAttribute('data-tab');
+  _activeTab = tab;
+  var body = document.getElementById('res-body');
+  if (body) {
+    Array.from(body.children).forEach(function(child) {
+      child.style.display = child.getAttribute('data-tab') === tab ? '' : 'none';
+    });
+  }
+  document.querySelectorAll('.rtab').forEach(function(t) {
+    t.classList.remove('on','on-proc');
+  });
+  el.classList.add(_currentMode === 'proc' ? 'on-proc' : 'on');
+  updateChipVisibility(tab);
+  clearOverlay();
+}
+
+function organizeIntoTabs() {
+  var body = document.getElementById('res-body');
+  if (!body) return;
+  var isProc = _currentMode === 'proc';
+
+  Array.from(body.children).forEach(function(el) {
+    var h = el.innerHTML || '';
+    var cls = (el.className || '') + ' ' + (el.id || '');
+    var tab;
+
+    if (isProc) {
+      if (cls.indexOf('mode-banner') !== -1 || cls.indexOf('rec-block') !== -1) tab = 'colour';
+      else if (h.indexOf('Colour grading') !== -1 || h.indexOf('colour_discount') !== -1) tab = 'colour';
+      else if (h.indexOf('Grade claim') !== -1 || h.indexOf('grade-mismatch') !== -1) tab = 'colour';
+      else if (h.indexOf('Output mix') !== -1 || h.indexOf('om-row') !== -1) tab = 'output';
+      else if (cls.indexOf('mgrid') !== -1 || h.indexOf('Broken dal') !== -1 || h.indexOf('Skin presence') !== -1) tab = 'metrics';
+      else if (cls.indexOf('conf-row') !== -1 || cls.indexOf('lpills') !== -1 || cls.indexOf('verdict') !== -1) tab = 'verdict';
+      else if (cls.indexOf('al-box') !== -1 || cls.indexOf('al-d') !== -1 || cls.indexOf('al-w') !== -1 || cls.indexOf('al-i') !== -1) tab = 'verdict';
+      else tab = 'colour';
+    } else {
+      // RAW: colour | output | prediction | metrics | verdict
+      if (cls.indexOf('mode-banner') !== -1) tab = 'colour';
+      else if (h.indexOf('Colour grading') !== -1 || h.indexOf('colour_discount') !== -1) tab = 'colour';
+      else if (h.indexOf('Size grading') !== -1 || cls.indexOf('size-card') !== -1 || cls.indexOf('raw-size-card') !== -1) tab = 'output';
+      else if (h.indexOf('Expected mill output') !== -1 || h.indexOf('bold_dal') !== -1) tab = 'prediction';
+      else if (h.indexOf('Predicted dal output') !== -1 || h.indexOf('prediction-card') !== -1) tab = 'prediction';
+      else if (cls.indexOf('rec-raw') !== -1 || cls.indexOf('recovery-block-raw') !== -1) tab = 'prediction';
+      else if (cls.indexOf('mgrid') !== -1 || h.indexOf('Broken grain') !== -1 || h.indexOf('Moisture') !== -1) tab = 'metrics';
+      else if (cls.indexOf('conf-row') !== -1 || cls.indexOf('lpills') !== -1 || cls.indexOf('verdict') !== -1) tab = 'verdict';
+      else if (cls.indexOf('al-box') !== -1 || cls.indexOf('al-d') !== -1 || cls.indexOf('al-w') !== -1 || cls.indexOf('al-i') !== -1) tab = 'verdict';
+      else tab = 'colour';
+    }
+
+    el.setAttribute('data-tab', tab);
+    el.style.display = tab === _activeTab ? '' : 'none';
+  });
+}
+
+// ─── ACTIONS ──────────────────────────────────────────────────────────
+function sendToMargin() {
+  if (!lastResult) return;
+  const r = lastResult;
+  const isProc = r.mode === 'proc';
+  const msg = isProc
+    ? `QualityEye Processed Dal scan: ${r.crop} Lot ${r.lot_number||lotData.lot}\nActual grade: ${r.actual_grade||r.colour_grade} | Quoted: ₹${lotData.price}/qtl | Qty: ${r.lot_size_qtl} qtl\nBroken dal: ${(r.metrics?.broken_dal_pct||0).toFixed(1)}% | Skin: ${(r.metrics?.skin_presence_pct||0).toFixed(1)}%\nColour discount: −₹${r.colour_discount_per_qtl||0}/qtl`
+    : `QualityEye Raw scan: ${r.crop} Lot ${r.lot_number||lotData.lot}\nRecovery: ${(r.estimated_recovery_pct||0).toFixed(1)}% | Quoted: ₹${lotData.price}/qtl | Qty: ${r.lot_size_qtl} qtl\nColour: ${r.colour_grade} | Broken: ${(r.metrics?.broken_grain_pct||0).toFixed(1)}% | Moisture: ${(r.metrics?.moisture_pct||0).toFixed(1)}%\n\nRun MarginEngine with ${(r.estimated_recovery_pct||0).toFixed(1)}% recovery.`;
+  alert(msg);
+}
+
+function askAdvisor() {
+  if (!lastResult) return;
+  const r = lastResult, isProc = r.mode === 'proc';
+  const flags = (r.alerts||[]).map(a=>a.title).join(', ');
+  const msg = isProc
+    ? `Processed ${r.crop} dal, lot ${r.lot_number||lotData.lot}: actual grade ${r.actual_grade||r.colour_grade}, claimed ${r.claimed_grade||'not stated'}, broken ${(r.metrics?.broken_dal_pct||0).toFixed(1)}%, skin ${(r.metrics?.skin_presence_pct||0).toFixed(1)}%, quoted ₹${lotData.price}/qtl${flags?', flags: '+flags:''}. What should I negotiate?`
+    : `Raw ${r.crop} lot ${r.lot_number||lotData.lot}: recovery ${(r.estimated_recovery_pct||0).toFixed(1)}%, grade ${r.colour_grade}, broken ${(r.metrics?.broken_grain_pct||0).toFixed(1)}%, moisture ${(r.metrics?.moisture_pct||0).toFixed(1)}%, quoted ₹${lotData.price}/qtl${flags?', flags: '+flags:''}. What should I negotiate?`;
+  alert(msg);
+}
+
+// ─── DEMO ─────────────────────────────────────────────────────────────
+async function showDemo(demoMode) {
+  mode = demoMode;
+  b64 = null;
+  if (demoMode === 'raw') {
+    lotData = { lot:'MG-1143', loc:'Nagpur godown', qty:300, price:7200, recov:65, grade:'', seller:'Sharma Traders' };
+    const r = {
+      mode:'raw', crop:'Moong', lot_number:'MG-1143',
+      estimated_recovery_pct:61.2, assumed_recovery_pct:65,
+      lot_size_qtl:300, quoted_price_per_qtl:7200, dal_price_per_kg:72,
+      colour_grade:'B+',
+      colour_distribution:[
+        {key:'g1',label:'Parrot green', hex:'#3d7a1e',pct:38,price_impact:'+₹0',   regions:[{x1:5,y1:20,x2:35,y2:55},{x1:55,y1:10,x2:80,y2:40}]},
+        {key:'g2',label:'Olive green',  hex:'#5a9e2f',pct:25,price_impact:'−₹80/qtl', regions:[{x1:30,y1:50,x2:60,y2:80}]},
+        {key:'g3',label:'Yellowing',    hex:'#c9b84a',pct:24,price_impact:'−₹220/qtl',regions:[{x1:60,y1:45,x2:90,y2:75}]},
+        {key:'g4',label:'Dull / brown', hex:'#8a7040',pct:13,price_impact:'−₹400/qtl',regions:[{x1:10,y1:65,x2:35,y2:90}]},
+      ],
+      colour_discount_per_qtl:195,
+      size_distribution:{bold_pct:52,medium_pct:33,small_pct:15,uniformity_score:65,
+        bold_regions:[{x1:8,y1:12,x2:28,y2:32},{x1:52,y1:8,x2:72,y2:28},{x1:30,y1:55,x2:50,y2:75}],
+        medium_regions:[{x1:35,y1:20,x2:55,y2:40},{x1:62,y1:45,x2:82,y2:65}],
+        small_regions:[{x1:15,y1:65,x2:35,y2:85},{x1:70,y1:65,x2:88,y2:82}]},
+      yield_breakdown:{bold_dal_pct:49,medium_dal_pct:19,chilka_broken_pct:23,powder_waste_pct:9},
+      metrics:{broken_grain_pct:19.5,moisture_pct:12.4,shrivelled_pct:4.8,impurities_pct:1.2,black_spots_pct:2.9,weevil_damage_pct:0.3,germination_damage_pct:1.1},
+      adulteration:{artificial_colouring_suspected:false,surface_coating_suspected:false,oiling_suspected:false,notes:''},
+      alerts:[{type:'warning',title:'High split grain — 19.5%',message:'Nearly 1 in 5 grains is split — chilka output will be high. Negotiate ₹300+ discount.'}],
+      confidence_pct:79,
+      predicted_dal_colour:'Pale to medium yellow',
+      predicted_dal_colour_hex:'#d4b84a',
+      predicted_dal_size:'Mixed — moderate bold fraction, high chilka due to split grains',
+      image_quality_note:'Demo data — tap colour chips above to see how the overlay works on a real scan.',
+      lot_meta:{likely_origin:'Rajasthan / MP',likely_season:'Old crop',age_estimate:'6-12 months',storage_quality:'average',overall_verdict:'This lot has high split grain at ~19.5% and mixed colour — below the 65% recovery assumption. At ₹7200 quoted this lot should not be purchased above ₹6800. Negotiate hard or find a cleaner lot.'}
+    };
+    lastResult = r;
+    await buildResultScreen(r);
+    document.getElementById('res-badge').textContent = 'Moong'; document.getElementById('res-badge').className = 'pg';
+    document.getElementById('res-btn-margin').className = 'btn-p';
+  } else {
+    lotData = { lot:'MD-0892', loc:'Nagpur market', qty:150, price:8400, recov:65, grade:'A', seller:'Patel Dal Mill' };
+    const r = {
+      mode:'proc', crop:'Moong', lot_number:'MD-0892',
+      lot_size_qtl:150, quoted_price_per_qtl:8400, claimed_grade:'A', actual_grade:'B+',
+      colour_grade:'B+', grade_matches_claim:false,
+      colour_distribution:[
+        {key:'g1',label:'Bright golden', hex:'#e8c840',pct:42,price_impact:'+₹0',   regions:[{x1:10,y1:20,x2:50,y2:60}]},
+        {key:'g2',label:'Pale yellow',   hex:'#e8d87a',pct:32,price_impact:'−₹80/qtl', regions:[{x1:45,y1:15,x2:80,y2:50}]},
+        {key:'g3',label:'Cream / white', hex:'#f5f0d0',pct:18,price_impact:'−₹200/qtl',regions:[{x1:15,y1:55,x2:55,y2:85}]},
+        {key:'g4',label:'Discoloured',   hex:'#b8945a',pct:8, price_impact:'−₹400/qtl',regions:[{x1:60,y1:55,x2:90,y2:85}]},
+      ],
+      colour_discount_per_qtl:120,
+      output_mix:[
+        {key:'bold',  label:'Whole halves (bold)',hex:'#d4a820',pct:42,price_impact:'+Rs0',     regions:[{x1:8,y1:25,x2:28,y2:45},{x1:35,y1:35,x2:52,y2:55},{x1:60,y1:20,x2:78,y2:40},{x1:20,y1:58,x2:38,y2:76},{x1:68,y1:55,x2:85,y2:72}]},
+        {key:'medium',label:'Whole halves (med)', hex:'#e8d070',pct:30,price_impact:'-Rs80/qtl', regions:[{x1:28,y1:18,x2:45,y2:36},{x1:52,y1:42,x2:68,y2:58},{x1:12,y1:62,x2:30,y2:78},{x1:72,y1:38,x2:88,y2:55}]},
+        {key:'broken',label:'Broken dal',         hex:'#EF9F27',pct:14,price_impact:'-Rs200/qtl',regions:[{x1:40,y1:25,x2:55,y2:38},{x1:18,y1:44,x2:33,y2:56},{x1:62,y1:60,x2:76,y2:72}]},
+        {key:'dehusked',label:'Dehusked pieces',hex:'#8a9e50',pct:0,price_impact:'-Rs300/qtl',regions:[]},
+        {key:'powder',label:'Powder / fines',      hex:'#aaa090',pct:5, price_impact:'-Rs500/qtl',regions:[]},
+      ],
+      metrics:{broken_dal_pct:14,skin_presence_pct:4.2,moisture_pct:11.8,discoloured_pct:8,impurities_pct:0.8,size_uniformity:62,lustre_score:68},
+      adulteration:{artificial_colouring_suspected:false,oiling_suspected:false,mixing_suspected:true,notes:'Colour inconsistency suggests batches from different processing runs mixed together.'},
+      alerts:[
+        {type:'danger',title:'Grade mismatch — sold as A, is B+',message:'Actual grade B+ not A — negotiate based on B+ pricing, not A.'},
+        {type:'warning',title:'Broken dal at 14%',message:'Above the 8-10% acceptable for a premium lot. This affects resale value.'},
+      ],
+      confidence_pct:82,
+      image_quality_note:'Demo data — tap colour chips to see how the grade overlay works on a real scan.',
+      lot_meta:{likely_origin:'MP / Rajasthan',likely_season:'New crop',age_estimate:'3-6 months',storage_quality:'average',overall_verdict:'This lot is being sold as Grade A but is actually Grade B+ due to colour mix and broken %. At ₹8400 quoted, fair price for B+ moong dal is ₹8000-8100. Insist on ₹300 discount or get a grade certificate before buying.'}
+    };
+    lastResult = r;
+    await buildResultScreen(r);
+    document.getElementById('res-badge').textContent = 'Moong dal'; document.getElementById('res-badge').className = 'pb';
+    document.getElementById('res-btn-margin').className = 'btn-p proc';
+  }
+  goScr('scr-res');
+}
+
+// ─── ERROR ────────────────────────────────────────────────────────────
+function showErr(msg) { document.getElementById('err-msg').textContent = msg; goScr('scr-err'); }
+function retryFromErr() { if (nextAction==='cam') startCam(); else document.getElementById('file-inp').click(); }
+</script>
+</body>
+</html>
